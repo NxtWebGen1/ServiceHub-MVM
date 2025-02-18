@@ -59,24 +59,8 @@ register_activation_hook( __FILE__, 'activate_servicehub_mvm' );
 register_deactivation_hook( __FILE__, 'deactivate_servicehub_mvm' );
 
 /**
- * The core plugin class that is used to define internationalization,
+ * The core plugin class that is used to define,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-servicehub-mvm.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-servicehub-mvm-init.php';
 
-/**
- * Begins execution of the plugin.
- *
- * Since everything within the plugin is registered via hooks,
- * then kicking off the plugin from this point in the file does
- * not affect the page life cycle.
- *
- * @since    1.0.0
- */
-function run_servicehub_mvm() {
-
-	$plugin = new Servicehub_Mvm();
-	$plugin->run();
-
-}
-run_servicehub_mvm();
