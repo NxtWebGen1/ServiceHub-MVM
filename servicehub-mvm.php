@@ -52,7 +52,7 @@ function activate_servicehub_mvm() {
  */
 function deactivate_servicehub_mvm() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-servicehub-mvm-deactivator.php';
-	servicehub_mvm_deactivate();
+	servicehub_mvm_deactivate(); 
 }
 
 register_activation_hook( __FILE__, 'activate_servicehub_mvm' );
