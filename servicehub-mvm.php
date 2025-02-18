@@ -42,8 +42,8 @@ define( 'SERVICEHUB_MVM_VERSION', '1.0.0' );
  * This action is documented in includes/class-servicehub-mvm-activator.php
  */
 function activate_servicehub_mvm() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-servicehub-mvm-activator.php';
-	Servicehub_Mvm_Activator::activate();
+    require_once plugin_dir_path( __FILE__ ) . 'includes/class-servicehub-mvm-activator.php';
+    servicehub_mvm_activate(); // Call the function that adds the vendor role
 }
 
 /**
@@ -52,7 +52,7 @@ function activate_servicehub_mvm() {
  */
 function deactivate_servicehub_mvm() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-servicehub-mvm-deactivator.php';
-	Servicehub_Mvm_Deactivator::deactivate();
+	servicehub_mvm_deactivate();
 }
 
 register_activation_hook( __FILE__, 'activate_servicehub_mvm' );
