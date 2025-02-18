@@ -62,5 +62,7 @@ register_deactivation_hook( __FILE__, 'deactivate_servicehub_mvm' );
  * The core plugin class that is used to define,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-servicehub-mvm-init.php';
+require_once plugin_dir_path(__FILE__) . 'includes/class-servicehub-mvm-init.php';
+// Load authentication and shortcode handling of LOGIN/Registration of vendor
+require_once plugin_dir_path(__FILE__) . 'public/class-servicehub-mvm-auth.php';
 

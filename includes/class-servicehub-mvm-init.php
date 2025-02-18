@@ -1,2 +1,2 @@
 <?php 
-echo "roiahdslakjdkl";
+//Including Vendor Authentication Login/Registration file
