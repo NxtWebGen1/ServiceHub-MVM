@@ -1,4 +1,4 @@
-<h3>this is john</h3>
+
 <div class="container">
     <div class="screen">
         <div class="screen__content">

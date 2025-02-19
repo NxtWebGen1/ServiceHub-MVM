@@ -1,0 +1,25 @@
+body {
+    background-color: #f8f9fa;
+}
+.login-container {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+.login__icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+}
+.login__input {
+    padding-left: 40px;
+}
+.login__submit {
+    width: 100%;
+    font-weight: bold;
+}
