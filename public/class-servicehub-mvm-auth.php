@@ -31,3 +31,14 @@ function my_login_form(){
     return ob_get_clean();
  }
  add_shortcode( 'my_login_form', 'my_login_form' );
+
+ //CREATE SHORTCODE OF REGISTER FORM FOR NEW USER
+ function my_registration_form(){
+   ob_start();
+   echo " chal gaya!"; 
+   include plugin_dir_path(__FILE__) . 'public\registration-form.php';
+
+   return ob_get_clean();
+}
+add_shortcode( 'my_registration_form', 'my_registration_form' );
+
