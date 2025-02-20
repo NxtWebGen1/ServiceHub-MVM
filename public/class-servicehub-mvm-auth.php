@@ -70,6 +70,14 @@ add_shortcode( 'my_registration_form', 'my_registration_form' );
 
 
 
+// ENQUEUE STYLE
+function login_style()
+{
+    $path_style = plugins_url('css\login.css', __FILE__);
+
+    wp_enqueue_style('login_style', $path_style,);
+}
+add_action('wp_enqueue_scripts', 'login_style');
 
 
  
@@ -146,7 +154,9 @@ function handle_vendor_registration() {
         }
 
         // Redirect to login page or dashboard        
-        wp_redirect(site-url()); //CUrretly redirecting to home page
+        wp_redirect(home_url('/index.php'));  //CUrretly redirecting to home page
+        
+
 
         
         exit;
