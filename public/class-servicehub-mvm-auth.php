@@ -128,6 +128,7 @@ function handle_vendor_registration() {
             'ID' => $user_id,
             'role' => 'vendor',
             'display_name' => $full_name,
+            'user_nicename' =>$full_name //We can just add the nick name here 
         ]);
 
         // STORING OTHER USER DETAILS USING META
