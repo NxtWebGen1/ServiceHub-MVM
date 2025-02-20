@@ -137,22 +137,41 @@ function handle_vendor_registration() {
         update_user_meta($user_id, 'website', $website);
         update_user_meta($user_id, 'service_location', $service_location);
 
-        // Handle profile picture upload
-        if (!empty($_FILES['profile_picture']['name'])) {
-            require_once(ABSPATH . 'wp-admin/includes/file.php');
-            $uploaded = wp_handle_upload($_FILES['profile_picture'], ['test_form' => false]);
 
-            if (isset($uploaded['file'])) {
-                $attachment = [
-                    'post_mime_type' => $uploaded['type'],
-                    'post_title' => basename($uploaded['file']),
-                    'post_content' => '',
-                    'post_status' => 'inherit'
-                ];
-                $attach_id = wp_insert_attachment($attachment, $uploaded['file']);
-                update_user_meta($user_id, 'profile_picture', $attach_id);
-            }
-        }
+
+
+       // Check if a profile picture file has been uploaded
+if (!empty($_FILES['profile_picture']['name'])) { 
+
+    // Include WordPress file handling functions
+    require_once(ABSPATH . 'wp-admin/includes/file.php');
+
+    // Handle the file upload, disabling form test validation
+    $uploaded = wp_handle_upload($_FILES['profile_picture'], ['test_form' => false]);
+
+    // Check if the file was successfully uploaded
+    if (isset($uploaded['file'])) { 
+
+        // Prepare attachment details for the uploaded file
+        $attachment = [
+            'post_mime_type' => $uploaded['type'], // Set the file MIME type
+            'post_title' => basename($uploaded['file']), // Set the attachment title as the file name
+            'post_content' => '', // No content needed for the attachment
+            'post_status' => 'inherit' // Inherit status from the parent (typically 'publish')
+        ];
+
+        // Insert the attachment into the WordPress database and get its ID
+        $attach_id = wp_insert_attachment($attachment, $uploaded['file']); 
+
+            // Retrieve the URL of the uploaded image
+        $image_url = wp_get_attachment_url($attach_id);   //THIS WILL HELP TO GET THE URL
+
+        // Store the URL instead of just the ID
+        update_user_meta($user_id, 'profile_picture', $image_url);
+
+    }
+}
+
 
         // Redirect to login page or dashboard        
         wp_redirect(home_url('/index.php'));  //CUrretly redirecting to home page
