@@ -100,7 +100,7 @@
 
         <!-- Already have an account? -->
         <div class="text-center mt-3">
-        <a href="<?php echo plugins_url('login-form.php', __FILE__); ?>" class="text-decoration-none">
+        <a href="<?php echo get_permalink(get_page_by_path('vendor-login')); ?>" class="text-decoration-none">
     Already have an account? Log in
 </a>
 

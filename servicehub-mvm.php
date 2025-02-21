@@ -66,3 +66,10 @@ require_once plugin_dir_path(__FILE__) . 'includes/class-servicehub-mvm-init.php
 // Load authentication and shortcode handling of LOGIN/Registration of vendor
 require_once plugin_dir_path(__FILE__) . 'public/class-servicehub-mvm-auth.php';
 
+
+// Creates Custom vendor USer Role
+register_activation_hook(__FILE__, 'servicehub_mvm_activate');
+
+
+// Creates the pages of login and registration of vendor
+register_activation_hook(__FILE__, 'servicehub_mvm_create_pages');

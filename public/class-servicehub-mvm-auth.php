@@ -35,7 +35,7 @@ function servicehub_mvm_handle_vendor_login() {
             // Check if the user is a vendor
             if (in_array('vendor', $roles)) {
                 // Redirect to vendor dashboard
-                wp_redirect(home_url('/registration-page')); // Change this URL
+                wp_redirect(home_url()); // Change this URL
                 exit;
             } else {
                 // If not a vendor, log them out and show error
@@ -46,12 +46,12 @@ function servicehub_mvm_handle_vendor_login() {
     }
 }
    //CREATE SHORTCODE OF LOGIN FORM FOR NEW USER
-   function my_login_form(){
+   function vendor_login_form(){
       ob_start();
       include 'login-form.php';
       return ob_get_clean();
    }
-   add_shortcode( 'my_login_form', 'my_login_form' );
+   add_shortcode( 'vendor_login_form', 'vendor_login_form' );
 
 
 
@@ -60,24 +60,24 @@ function servicehub_mvm_handle_vendor_login() {
 
 
  
- //CREATE SHORTCODE OF REGISTER FORM FOR NEW USER
- function my_registration_form(){
-   ob_start();   
-   include 'registration-form.php';
-   return ob_get_clean();
-}
-add_shortcode( 'my_registration_form', 'my_registration_form' );
+//CREATE SHORTCODE OF REGISTER FORM FOR NEW USER
+    function vendor_registration_form(){
+        ob_start();   
+        include 'registration-form.php';
+        return ob_get_clean();
+    }
+    add_shortcode( 'vendor_registration_form', 'vendor_registration_form' );
 
 
 
 // ENQUEUE STYLE
-function login_style()
-{
-    $path_style = plugins_url('css\login.css', __FILE__);
+    function login_style()
+    {
+        $path_style = plugins_url('css\login.css', __FILE__);
 
-    wp_enqueue_style('login_style', $path_style,);
-}
-add_action('wp_enqueue_scripts', 'login_style');
+        wp_enqueue_style('login_style', $path_style,);
+    }
+    add_action('wp_enqueue_scripts', 'login_style');
 
 
  
@@ -173,12 +173,8 @@ if (!empty($_FILES['profile_picture']['name'])) {
 }
 
 
-        // Redirect to login page or dashboard        
-        wp_redirect(home_url('/index.php'));  //CUrretly redirecting to home page
-        
-
-
-        
+        // Redirect to login page     
+        wp_redirect(get_permalink(get_page_by_path('vendor-login')));
         exit;
     }
 }

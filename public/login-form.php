@@ -53,7 +53,7 @@
         <!-- Forgot Password & Sign Up Links -->
         <div class="text-center mt-3">
             <a href="#" class="text-decoration-none">Forgot Password?</a> | 
-            <a href="#" class="text-decoration-none">Sign Up</a>
+            <a href="<?php echo get_permalink(get_page_by_path('vendor-registration')); ?>" class="text-decoration-none">Sign Up</a>
         </div>
     </div>
 </div>
