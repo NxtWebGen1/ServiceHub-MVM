@@ -55,10 +55,7 @@ function servicehub_mvm_handle_vendor_login() {
 
 
 
-
-
-
-
+   
  
 //CREATE SHORTCODE OF REGISTER FORM FOR NEW USER
     function vendor_registration_form(){
@@ -81,8 +78,6 @@ function servicehub_mvm_handle_vendor_login() {
 
 
  
-
-
 
 
 

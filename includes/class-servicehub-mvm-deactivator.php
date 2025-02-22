@@ -9,5 +9,3 @@ function servicehub_mvm_deactivate() {
     // Remove the "Vendor" user role
     remove_role('vendor');
 }
-
-
