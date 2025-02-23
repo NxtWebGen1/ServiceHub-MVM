@@ -97,26 +97,49 @@ function handle_vendor_registration() {
 
                 // Basic validation
             
-        // empty fields
-        if (empty($full_name) || empty($email) || empty($phone) || empty($password) || empty($confirm_password) || empty($service_location)) {
-            wp_die('Error: All required fields must be filled.');
-        }
-        if (!is_email($email)) {
-            wp_die('Error: Invalid email address.');
-        }
-        if (username_exists($email) || email_exists($email)) { //BOTH CHECKING EMAIL
-            wp_die('Error: Email is already registered.');
-        }
-        if ($password !== $confirm_password) {
-            wp_die('Error: Passwords do not match.');
-        }
+          // Initialize an array to store error messages
+          $error_messages = array();
 
-        // Create new user
-        $user_id = wp_create_user($email, $password, $email); // i am using create not insert for better felxibility
+          // Check all conditions and collect errors
+          if (empty($full_name) || empty($email) || empty($phone) || empty($password) || empty($confirm_password) || empty($service_location)) {
+              $error_messages[] = 'Error: All required fields must be filled.';
+          }
+  
+          if (!is_email($email)) {
+              $error_messages[] = 'Error: Invalid email address.';
+          }
+              //separate suer name existance condition
+          if (username_exists($full_name)) {
+              $error_messages[] = 'Error: Username already exists. Try a different name.';
+          }
+  
+          if (email_exists($email)  ){
+              $error_messages[] = 'Error: Email is already registered.';
+          }
+  
+          if ($password !== $confirm_password) {
+              $error_messages[] = 'Error: Passwords do not match.';
+          }
+  
+          // If there are any errors, display them
+          if (!empty($error_messages)) {
+              wp_die(implode('<br>', $error_messages));
+          }
 
-        if (is_wp_error($user_id)) {
-            wp_die('Error: User registration failed.');
-        }
+
+ // Create new user
+ $user_data = array(
+    'user_login'   => $full_name,  // Consider generating a unique username if needed
+    'user_email'   => $email,
+    'user_pass'    => $password,
+    'display_name' => $full_name
+);
+$user_id = wp_insert_user($user_data);
+
+            // CHECKING IF THE USER ALREADY THERE IN DB
+if (is_wp_error($user_id)) {
+    wp_die('Error: Could not create user. ' . $user_id->get_error_message());
+}
 
         // Assign vendor role
         wp_update_user([
@@ -126,7 +149,7 @@ function handle_vendor_registration() {
             'user_nicename' =>$full_name //We can just add the nick name here 
         ]);
 
-        // STORING OTHER USER DETAILS USING META
+        // STORING aLL  USER DETAILS 
         update_user_meta($user_id, 'phone', $phone);
         update_user_meta($user_id, 'business_name', $business_name);
         update_user_meta($user_id, 'website', $website);
