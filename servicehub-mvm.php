@@ -73,3 +73,14 @@ register_activation_hook(__FILE__, 'servicehub_mvm_activate');
 
 // Creates the pages of login and registration of vendor
 register_activation_hook(__FILE__, 'servicehub_mvm_create_pages');
+
+
+
+// Flush rewrite rules on activation
+// This ensures that the custom post type's URL structure (permalinks) works correctly
+// without needing to manually refresh permalinks in WordPress settings.
+// It registers the CPT and then flushes the rewrite rules.
+register_activation_hook(__FILE__, function () {
+    servicehub_mvm_register_service_cpt(); // Register the custom post type
+    flush_rewrite_rules(); // Refresh WordPress rewrite rules
+});

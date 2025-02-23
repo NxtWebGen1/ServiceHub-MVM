@@ -27,7 +27,7 @@ function servicehub_mvm_create_pages() {
     // Create Login Page if not exists
     if (!get_page_by_title('Vendor Login')) {
         wp_insert_post([
-            'post_title'    => '    ',
+            'post_title'    => 'Vendor Login',
             'post_content'  => '[vendor_login_form]', // Login form shortcode
             'post_status'   => 'publish',
             'post_type'     => 'page'
