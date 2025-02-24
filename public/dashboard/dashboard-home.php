@@ -20,9 +20,9 @@ function vendor_dashboard_menu(){
                 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'profile';
                 
                 if ($tab == 'profile') {
-                    include 'vendor-profile.php'; // Include Profile Page
+                    include 'services/vendor-profile.php'; // Include Profile Page
                 } elseif ($tab == 'services') {
-                    include 'vendor-services.php'; // Include Services Page
+                    include 'services/services-main.php'; // Include Services Page
                 }
                 ?>
             </div>
