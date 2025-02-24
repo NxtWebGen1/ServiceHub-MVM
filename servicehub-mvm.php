@@ -37,6 +37,11 @@ if ( ! defined( 'WPINC' ) ) {
  */
 define( 'SERVICEHUB_MVM_VERSION', '1.0.0' );
 
+
+// Define global constant in your main plugin file.
+define('SERVICEHUB_MVM_PLUGIN_PATH', plugin_dir_path(__FILE__));
+
+
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-servicehub-mvm-activator.php
@@ -86,16 +91,3 @@ register_activation_hook(__FILE__, function () {
 });
 
 
-
-//DISPLAY SINGLE SERVICE TEMPLATE FOR INDIVIDUAL SERVICE
-// Load single service template from plugin folder
-function servicehub_mvm_load_single_service_template($template) {
-    if (is_singular('service')) {
-        $plugin_template = plugin_dir_path(__FILE__) . 'public/templates/vendor/single-service.php';
-        if (file_exists($plugin_template)) {
-            return $plugin_template;
-        }
-    }
-    return $template;
-}
-add_filter('template_include', 'servicehub_mvm_load_single_service_template');
