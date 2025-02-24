@@ -30,6 +30,8 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+
+
 /**
  * Currently plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
@@ -40,7 +42,6 @@ define( 'SERVICEHUB_MVM_VERSION', '1.0.0' );
 
 // Define global constant in your main plugin file.
 define('SERVICEHUB_MVM_PLUGIN_PATH', plugin_dir_path(__FILE__));
-
 
 /**
  * The code that runs during plugin activation.
@@ -91,3 +92,14 @@ register_activation_hook(__FILE__, function () {
 });
 
 
+
+//DISPLAY Arhive SERVICE TEMPLATE FOR arhive SERVICE
+add_filter('archive_template', function($archive_template) {
+    if (is_post_type_archive('service')) {
+        $plugin_template = SERVICEHUB_MVM_PLUGIN_PATH . 'public/templates/vendor/archive-service.php';
+        if (file_exists($plugin_template)) {
+            return $plugin_template;
+        }
+    }
+    return $archive_template;
+});
