@@ -84,3 +84,18 @@ register_activation_hook(__FILE__, function () {
     servicehub_mvm_register_service_cpt(); // Register the custom post type
     flush_rewrite_rules(); // Refresh WordPress rewrite rules
 });
+
+
+
+//DISPLAY SINGLE SERVICE TEMPLATE FOR INDIVIDUAL SERVICE
+// Load single service template from plugin folder
+function servicehub_mvm_load_single_service_template($template) {
+    if (is_singular('service')) {
+        $plugin_template = plugin_dir_path(__FILE__) . 'public/templates/vendor/single-service.php';
+        if (file_exists($plugin_template)) {
+            return $plugin_template;
+        }
+    }
+    return $template;
+}
+add_filter('template_include', 'servicehub_mvm_load_single_service_template');
