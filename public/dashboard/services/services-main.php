@@ -18,7 +18,7 @@ $query = new WP_Query($args);
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Your Services</h2>
-        <a href="#" class="btn btn-primary">ADD NEW</a>
+        <a href="?page=vendor-dashboard&tab=add-service" class="btn btn-primary">ADD NEW</a>
     </div>
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
