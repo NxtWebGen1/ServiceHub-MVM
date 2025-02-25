@@ -35,7 +35,9 @@ function servicehub_mvm_handle_vendor_login() {
             // Check if the user is a vendor
             if (in_array('vendor', $roles)) {
                 // Redirect to vendor dashboard
-                wp_redirect(home_url()); // Change this URL
+                wp_redirect(admin_url('admin.php?page=vendor-dashboard')); 
+                exit;
+
                 exit;
             } else {
                 // If not a vendor, log them out and show error
