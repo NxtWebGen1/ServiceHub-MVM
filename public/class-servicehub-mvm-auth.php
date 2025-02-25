@@ -200,6 +200,8 @@ add_action('init', 'handle_vendor_registration');
 
 
 
+//DASHBOARD MAIN AUTH FILE
+include 'dashboard/dashboard-mvm-auth.php';
 
 
 
@@ -207,18 +209,4 @@ add_action('init', 'handle_vendor_registration');
 
 
 
-// VENDOR ADMIN MENU FOR VENDOR USER CONTAINIGN PROFILE AD SERVICES SECTION
-function vendor_menu() {
-    add_menu_page(
-        'Vendor Dashboard', // Page Title
-        'Vendor Dashboard', // Menu Title
-        'read', // only cendor should see this
-        'vendor-dashboard', //  Slug
-        'vendor_dashboard_menu', // Callback  Function
-        'dashicons-store', // Icon       
-    );
-    include 'dashboard\dashboard-home.php';
-
-}
-add_action('admin_menu', 'vendor_menu');
 

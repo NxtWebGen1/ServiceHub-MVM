@@ -73,6 +73,7 @@ require_once plugin_dir_path(__FILE__) . 'includes/class-servicehub-mvm-init.php
 require_once plugin_dir_path(__FILE__) . 'public/class-servicehub-mvm-auth.php';
 
 
+
 // Creates Custom vendor USer Role
 register_activation_hook(__FILE__, 'servicehub_mvm_activate');
 
