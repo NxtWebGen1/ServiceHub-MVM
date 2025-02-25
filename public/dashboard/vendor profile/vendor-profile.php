@@ -1,55 +1,124 @@
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-header">
-            <h4>Vendor Profile</h4>
-        </div>
-        <div class="card-body">
-            <form method="POST" action="" enctype="multipart/form-data">
-                
-                <!-- Profile Picture -->
-                <div class="mb-3">
-                    <label class="form-label">Profile Picture</label>
-                    <input type="file" class="form-control" name="profile_picture">
-                </div>
+<?php
 
-                <!-- Full Name -->
-                <div class="mb-3">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" class="form-control" name="full_name" value="John Doe" required>
-                </div>
 
-                <!-- Email (Disabled) -->
-                <div class="mb-3">
-                    <label class="form-label">Email Address</label>
-                    <input type="email" class="form-control" name="email" value="vendor@example.com" disabled>
-                </div>
+    // Output the HTML content
+    echo 'this is john';
 
-                <!-- Phone Number -->
-                <div class="mb-3">
-                    <label class="form-label">Phone Number</label>
-                    <input type="text" class="form-control" name="phone" value="123-456-7890">
-                </div>
+    $current_user = wp_get_current_user();  // Get the current logged-in user
 
-                <!-- Website -->
-                <div class="mb-3">
-                    <label class="form-label">Website</label>
-                    <input type="url" class="form-control" name="website" value="https://yourbusiness.com">
-                </div>
+// DATA FROM META TABLE
+$phone = get_user_meta($current_user->ID, 'phone', true);  //THIS TRUE RETURNS A SINGLE VALUE (not array)
+$business_name = get_user_meta($current_user->ID, 'business_name', true); 
+$website = get_user_meta($current_user->ID, 'website', true); 
+$service_location = get_user_meta($current_user->ID, 'service_location', true); 
+$business_name = get_user_meta($current_user->ID, 'business_name', true); 
 
-                <!-- Service Location -->
-                <div class="mb-3">
-                    <label class="form-label">Service Location</label>
-                    <input type="text" class="form-control" name="service_location" value="New York, USA">
-                </div>
 
-                <!-- Password Change -->
-                <div class="mb-3">
-                    <label class="form-label">New Password</label>
-                    <input type="password" class="form-control" name="password" placeholder="Enter new password (optional)">
-                </div>
 
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-            </form>
+
+
+    ?>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="" enctype="multipart/form-data">
+                    <div class="row mb-3">
+
+                            <!-- USER ID HIDDEN FIELD -->
+                            <input type="hidden" class="form-control" name="user_id_from_form" value="<?php  $current_user->ID; ?>">
+                          
+
+
+                        <!-- Profile Picture -->
+                        <div class="col-md-6">
+                            <label class="form-label">Profile Picture</label>
+                            <input type="file" class="form-control" name="profile_picture">
+                        </div>
+                        <!-- UsSer Name  DISABLED-->
+                        <div class="col-md-6">
+                            <label class="form-label">User Name</label>
+                            <input type="text" class="form-control" name="full_name" value="<?php echo $current_user->user_login ?>" disabled>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <!-- Email (Disabled) -->
+                        <div class="col-md-6">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" name="email" value="<?php echo $current_user->user_email ?>" disabled>
+                        </div>
+                        <!-- Phone Number -->
+                        <div class="col-md-6">
+                            <label class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" name="phone" value="<?php echo $phone ?>">
+                        </div>
+
+                            <!-- Shope Name -->
+                        <div class="col-md-6">
+                            <label class="form-label">SBusiness  Name</label>
+                            <input type="text" class="form-control" name="business_name" value="<?php echo $business_name ?>">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <!-- Website -->
+                        <div class="col-md-6">
+                            <label class="form-label">Website</label>
+                            <input type="url" class="form-control" name="website" value="<?php echo $website ?>">
+                        </div>
+                        <!-- Service Location -->
+                        <div class="col-md-6">
+                            <label class="form-label">Service Location</label>
+                            <input type="text" class="form-control" name="service_location" value="<?php echo $service_location ?>">
+                        </div>
+                    </div>
+
+
+                    <div class="row mb-3">
+                        <!-- Password Change -->
+                        <h6 class="change" id="changeBtn">Wanna Change Password?</h6>
+                            <div class="open-change" id="changeContainer" style="display: none;">
+                                <div class="col-md-6"> <!-- OLD PASSWORD -->                       
+                                    <label class="form-label">Enter Old Password</label>
+                                    <input type="password" class="form-control" name="old_password" placeholder="Enter your Old password ">
+                                </div>
+                                <div class="col-md-6">  <!-- NEW PASSWORD -->     
+                                    <label class="form-label">New Password</label>
+                                    <input type="password" class="form-control" name="new_password" placeholder="Enter new password (optional)">
+                                </div>
+
+                                <div class="col-md-6">  <!-- CONFIRM PASSWORD -->     
+                                    <label class="form-label">Confirm New Password</label>
+                                    <input type="password" class="form-control" name="confirm_password" placeholder="Confirm new password (optional)">
+                                </div>
+                            </div>
+
+
+                       
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="row mb-3">
+                        <div class="col-md-12 text-center">
+                            <button type="submit" class="btn btn-primary" name='profile_change' >Save Changes</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+ 
+
+<script>
+    // Add a click event listener to the "Change Password" link
+    document.getElementById('changeBtn').addEventListener('click', function() {
+        var container = document.getElementById('changeContainer');
+        
+        // Toggle the visibility of the change password container
+        if (container.style.display === 'none' || container.style.display === '') {
+            container.style.display = 'block'; // Show the container
+        } else {
+            container.style.display = 'none'; // Hide the container
+        }
+    });
+</script>

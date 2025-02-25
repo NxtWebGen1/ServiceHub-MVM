@@ -1,4 +1,8 @@
 <?php
+if (!function_exists('wp_get_current_user')) {
+    require_once ABSPATH . 'wp-includes/pluggable.php';
+}
+
 
 // VENDOR ADMIN MENU FOR VENDOR USER CONTAINIGN PROFILE AD SERVICES SECTION
 function vendor_menu() {
@@ -29,48 +33,51 @@ add_action('admin_menu', 'vendor_menu');
 
 
 // HANDLING PROFILE FORM CHANGES
+
 // SANITIZING FIELDS
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['profile_change'])) {
-    // $user_id_from_form = $_POST['user_id_from_form';]
-    $full_name = sanitize_text_field($_POST['full_name']);
+
+    global $wpdb;
+    $current_user = wp_get_current_user();
+    $user_id = $current_user->ID; // DEFINING AT TOP TO NOT HAVE UNDEFINE ERROR
+
     $phone = sanitize_text_field($_POST['phone']);
     $website = sanitize_text_field($_POST['website']);
     $service_location = sanitize_text_field($_POST['service_location']);
+    $business_name = sanitize_text_field($_POST['business_name']);
+
     $old_password = $_POST['old_password'];
     $new_password = $_POST['new_password'];
     $confirm_password = $_POST['confirm_password'];
 
-    
     // Initialize an array to store error messages
     $error_messages = array();
 
-    
-        // FIELDS SHOULDNT BE EMPTY
-    if (empty($full_name) || empty($phone) || empty($service_location)) {
-        $error_messages[] = 'ERRORSS: Full Name, Phone, and Service Location are required.';
+    // FIELDS SHOULD NOT BE EMPTY
+    if ( empty($phone) || empty($service_location) ) {
+        $error_messages[] = 'ERROR: Full Name, Phone, and Service Location are required.';
     }
 
-        // IF USER WANT TO CHANGE THE PASSWORD, HE MUST ENTER OLD ONE 
-        // TO CHANGE PASSWORD, ENTER ALL 3 PASSWORD FIELDS
+    // IF USER WANTS TO CHANGE THE PASSWORD, HE MUST ENTER THE OLD ONE 
     if (!empty($new_password) || !empty($confirm_password) || !empty($old_password)) {
-       
 
-        //if any password os empty
+        // If any password field is empty
         if (empty($old_password) || empty($new_password) || empty($confirm_password)) {
             $error_messages[] = 'Error: Please fill in all password fields to change your password.';
         } 
         elseif ($new_password !== $confirm_password) {
             $error_messages[] = 'Error: New password and confirm password do not match.';
-        }
-         else {
-            // Verify old password prensent in DB
-            global $wpdb;
-            $current_user = wp_get_current_user();
-            $user_id = $current_user->ID;
+        } 
+        elseif(
+                ($new_password == $confirm_password) == $old_password ) //php dosnt support three-way equality
+        {
+            $error_messages[] = 'Error:NEW PASSWORD CANNOT BE OLD ONE .';
 
+        }
+        else {
             // Retrieve the hashed password from the database
-            $hashed_password = $wpdb->get_var($wpdb->prepare( //get_var() helps to retrieve a single column data(faster);  prepare helps to run SQL query securely 
-                "SELECT user_pass FROM {$wpdb->users} WHERE ID = %d", //%d is just for placeholding of id 
+            $hashed_password = $wpdb->get_var($wpdb->prepare(
+                "SELECT user_pass FROM {$wpdb->users} WHERE ID = %d",
                 $user_id
             ));
 
@@ -81,17 +88,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['profile_change'])) {
         }
     }
 
-        // diw it if there is any error
+     // NO execution if theres any errors
     if (!empty($error_messages)) {
         wp_die(implode('<br>', $error_messages));
     }
 
-    //LET'S UPDATE USER META DATA IN db
+    //  UPDATE USER META DATA IN DB
     update_user_meta($user_id, 'phone', $phone);
     update_user_meta($user_id, 'website', $website);
     update_user_meta($user_id, 'service_location', $service_location);
+    update_user_meta($user_id, 'business_name', $business_name);
 
-    // If user entered a new password and old password is verified, update the password
+
+    //  If user entered a new password and old password is verified, update the password
     if (!empty($new_password) && !empty($confirm_password) && wp_check_password($old_password, $hashed_password, $user_id)) {
         wp_set_password($new_password, $user_id);
         echo "Password successfully updated!";
