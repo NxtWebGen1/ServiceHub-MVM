@@ -23,11 +23,44 @@
             <input type="text" class="form-control" id="service_price" name="service_price">
         </div>
 
-        <!-- Location -->
+        <!-- Service Location (Dropdown) -->
         <div class="mb-3">
             <label for="service_location" class="form-label">Location</label>
-            <input type="text" class="form-control" id="service_location" name="service_location" required>
+            <select class="form-control" id="service_location" name="service_location" required>
+                <option value="">Select Location</option>
+                <?php 
+                $locations = get_terms(array(
+                    'taxonomy' => 'service_location',
+                    'hide_empty' => false,
+                ));
+                if (!empty($locations)) {
+                    foreach ($locations as $location) {
+                        echo '<option value="' . esc_attr($location->term_id) . '">' . esc_html($location->name) . '</option>';
+                    }
+                }
+                ?>
+            </select>
         </div>
+
+        <!-- Service Type (Dropdown) -->
+        <div class="mb-3">
+            <label for="service_type" class="form-label">Service Type</label>
+            <select class="form-control" id="service_type" name="service_type" required>
+                <option value="">Select Service Type</option>
+                <?php 
+                $service_types = get_terms(array(
+                    'taxonomy' => 'service_type',
+                    'hide_empty' => false,
+                ));
+                if (!empty($service_types)) {
+                    foreach ($service_types as $service_type) {
+                        echo '<option value="' . esc_attr($service_type->term_id) . '">' . esc_html($service_type->name) . '</option>';
+                    }
+                }
+                ?>
+            </select>
+        </div>
+
 
         <!-- Availability -->
         <div class="mb-3">

@@ -21,11 +21,11 @@ function vendor_dashboard_menu() {
                 include SERVICEHUB_MVM_PLUGIN_PATH . 'public/dashboard/services/services-main.php'; // Services Page
             } elseif ($tab == 'add-service') {
                 include SERVICEHUB_MVM_PLUGIN_PATH . 'public/dashboard/services/services-add.php'; // Add Service Page
+            } elseif ($tab == 'edit-service' && isset($_GET['edit_service'])) {
+                include SERVICEHUB_MVM_PLUGIN_PATH . 'public/dashboard/services/services-edit.php'; // Edit Service Page
             }
             ?>
         </div>
     </div>
     <?php
 }
-
-
