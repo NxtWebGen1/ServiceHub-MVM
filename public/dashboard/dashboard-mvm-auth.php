@@ -32,7 +32,7 @@ add_action('admin_menu', 'vendor_menu');
 
 
 
-// HANDLING PROFILE FORM CHANGES
+// HANDLING VENDOT PROFILE FORM CHANGES/UPDATE
 
 // SANITIZING FIELDS
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['profile_change'])) {
@@ -45,6 +45,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['profile_change'])) {
     $website = sanitize_text_field($_POST['website']);
     $service_location = sanitize_text_field($_POST['service_location']);
     $business_name = sanitize_text_field($_POST['business_name']);
+    
+
+
+    
 
     $old_password = $_POST['old_password'];
     $new_password = $_POST['new_password'];
@@ -69,19 +73,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['profile_change'])) {
             $error_messages[] = 'Error: New password and confirm password do not match.';
         } 
         elseif(
-                ($new_password == $confirm_password) == $old_password ) //php dosnt support three-way equality
+                ($new_password == $confirm_password) == $old_password ) //php dosnt support three-way assigning equality
         {
             $error_messages[] = 'Error:NEW PASSWORD CANNOT BE OLD ONE .';
 
         }
         else {
-            // Retrieve the hashed password from the database
+            // Retrieve the hashed/Encrypted password from the database
             $hashed_password = $wpdb->get_var($wpdb->prepare(
                 "SELECT user_pass FROM {$wpdb->users} WHERE ID = %d",
                 $user_id
             ));
 
-            // Check if old password is correct
+            // Check if OLD password is correct
             if (!wp_check_password($old_password, $hashed_password, $user_id)) {
                 $error_messages[] = 'Error: Incorrect old password.';
             }
@@ -98,6 +102,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['profile_change'])) {
     update_user_meta($user_id, 'website', $website);
     update_user_meta($user_id, 'service_location', $service_location);
     update_user_meta($user_id, 'business_name', $business_name);
+
+
+    //FILE HANDLING
+    if (!empty($_FILES['profile_picture']['name'])) { 
+                // THESE ARE WP FILES THAT INACTIVE DEFAULT BUT HELPS TO HANDLE FILE THINGS 
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        require_once ABSPATH . 'wp-admin/includes/media.php';
+        require_once ABSPATH . 'wp-admin/includes/image.php';
+
+        $upload = media_handle_upload('profile_picture', 0); //handles the file upload process in WordPress. 0REPRESENTS NO POST ATACHED
+        if (!is_wp_error($upload)) {
+            $profile_picture = wp_get_attachment_url($upload);
+            update_user_meta($user_id, 'profile_picture', $profile_picture);
+        }
+    }
+
 
 
     //  If user entered a new password and old password is verified, update the password
