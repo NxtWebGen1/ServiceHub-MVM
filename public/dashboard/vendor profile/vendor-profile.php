@@ -20,7 +20,7 @@ $profile_picture = get_user_meta(get_current_user_id(), 'profile_picture', true)
 
 ?>
 <div class="container mt-5">
-    <div class="card">
+    <div class="card full-width">
         <div class="card-body">
             <form method="POST" action="" enctype="multipart/form-data">
                 <div class="row mb-3">
@@ -52,7 +52,7 @@ $profile_picture = get_user_meta(get_current_user_id(), 'profile_picture', true)
                         <label class="form-label">User Name</label>
                         <input type="text" class="form-control" name="full_name" value="<?php echo $current_user->user_login ?>" disabled>
                     </div>
-                    
+
                     <!-- EMail (Disabled) -->
                     <div class="col-md-6">
                         <label class="form-label">Email Address</label>

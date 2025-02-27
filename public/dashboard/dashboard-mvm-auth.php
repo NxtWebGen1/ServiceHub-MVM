@@ -25,6 +25,43 @@ add_action('admin_menu', 'vendor_menu');
 
 
 
+//ENQUEUING CSS 
+wp_enqueue_style(
+    'my-plugin-style', 
+    plugin_dir_url(__FILE__) . '/dashboard.css', 
+    array(), 
+    time() // THIS WILL FORCE CACHE WITH EVERYTIME REFRESH
+);
+
+function my_plugin_enqueue_bootstrap() {
+    // Enqueue Bootstrap CSS
+    wp_enqueue_style(
+        'bootstrap-css', 
+        'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css', 
+        array(), 
+        '5.3.2'
+    );
+
+    // Enqueue Bootstrap JS
+    wp_enqueue_script(
+        'bootstrap-js', 
+        'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js', 
+        array('jquery'), 
+        '5.3.2', 
+        true // Load in footer
+    );
+}
+add_action('wp_enqueue_scripts', 'my_plugin_enqueue_bootstrap'); // Use for frontend
+add_action('admin_enqueue_scripts', 'my_plugin_enqueue_bootstrap'); // Use for admin
+
+
+
+
+
+
+
+
+
 
 
 
@@ -128,3 +165,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['profile_change'])) {
 
     echo "Profile updated successfully!";
 }
+
+
+
+
+
+
+
+
+
