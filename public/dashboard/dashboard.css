@@ -1,6 +1,4 @@
-body, .container{
-    background-color: red !important;
-}
+
 /* Hide the container by default */
 #changeContainer {
     display: none;
