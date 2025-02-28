@@ -110,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['profile_change'])) {
             $error_messages[] = 'Error: New password and confirm password do not match.';
         } 
         elseif(
-                ($new_password == $confirm_password) == $old_password ) //php dosnt support three-way assigning equality
+                $new_password  == $old_password ) //php dosnt support three-way assigning equality
         {
             $error_messages[] = 'Error:NEW PASSWORD CANNOT BE OLD ONE .';
 
