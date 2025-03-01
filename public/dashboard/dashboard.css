@@ -12,3 +12,12 @@
 .full-width{
     min-width: 100% !important;
 }
+#wpfooter {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: none;
+    right: 0;
+    padding: 10px 20px;
+    color: #50575e;
+}
