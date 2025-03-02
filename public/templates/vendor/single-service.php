@@ -34,6 +34,17 @@ get_header();
             <?php the_content(); ?>
         </div>
 
+        <?php
+        $gallery = get_post_meta(get_the_ID(), '_service_gallery', true);
+
+        if (!empty($gallery) && is_array($gallery)) {
+            echo '<div class="service-gallery">';
+            foreach ($gallery as $image_id) {
+                echo wp_get_attachment_image($image_id, 'medium');
+            }
+            echo '</div>';
+        }
+?>        
     <?php endwhile; endif; ?>
 </div>
 

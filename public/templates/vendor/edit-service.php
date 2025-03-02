@@ -99,6 +99,28 @@ $featured_image_url = $featured_image_id ? wp_get_attachment_url($featured_image
             <input type="file" class="form-control" id="service_image" name="service_image">
         </div>
 
+        
+        <div class="mb-3">
+            <label for="service_gallery" class="form-label">Gallery Images</label>
+
+            <?php
+            $gallery_images = get_post_meta($service_id, '_service_gallery', true);
+            if (!empty($gallery_images) && is_array($gallery_images)) :
+                echo '<div class="d-flex flex-wrap">';
+                foreach ($gallery_images as $image_id) {
+                    $image_url = wp_get_attachment_url($image_id);
+                    if ($image_url) {
+                        echo '<div class="me-2 mb-2"><img src="' . esc_url($image_url) . '" class="img-thumbnail" width="100"></div>';
+                    }
+                }
+                echo '</div>';
+            endif;
+            ?>
+
+            <input type="file" class="form-control" id="service_gallery" name="service_gallery[]" multiple>
+        </div>
+
+
         <?php wp_nonce_field('edit_service_action', 'edit_service_nonce'); ?>
 
         <button type="submit" class="btn btn-primary">Update Service</button>

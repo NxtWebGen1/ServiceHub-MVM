@@ -48,6 +48,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_service_nonce']))
         }
     }
 
+    // Handle gallery images upload
+    if (!empty($_FILES['service_gallery']['name'][0])) {
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        require_once ABSPATH . 'wp-admin/includes/media.php';
+        require_once ABSPATH . 'wp-admin/includes/image.php';
+
+        // Get existing gallery images and ensure it's an array
+        $existing_gallery = get_post_meta($service_id, '_service_gallery', true);
+        $existing_gallery = is_array($existing_gallery) ? $existing_gallery : [];
+
+        $new_gallery_images = [];
+
+        foreach ($_FILES['service_gallery']['name'] as $key => $value) {
+            if (!empty($_FILES['service_gallery']['name'][$key])) {
+                $file = array(
+                    'name'     => $_FILES['service_gallery']['name'][$key],
+                    'type'     => $_FILES['service_gallery']['type'][$key],
+                    'tmp_name' => $_FILES['service_gallery']['tmp_name'][$key],
+                    'error'    => $_FILES['service_gallery']['error'][$key],
+                    'size'     => $_FILES['service_gallery']['size'][$key],
+                );
+
+                // Upload the file and attach it to the service
+                $file_id = media_handle_sideload($file, $service_id);
+                if (!is_wp_error($file_id)) {
+                    $new_gallery_images[] = $file_id;
+                }
+            }
+        }
+
+        // If new images are uploaded, merge them with existing images
+        if (!empty($new_gallery_images)) {
+            $updated_gallery = array_merge($existing_gallery, $new_gallery_images);
+            update_post_meta($service_id, '_service_gallery', $updated_gallery);
+        }
+    }
+
+
+
     // Redirect after successful update
     wp_redirect("?page=vendor-dashboard&tab=services&updated=true");
     exit;

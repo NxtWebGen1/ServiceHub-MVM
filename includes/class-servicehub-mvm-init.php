@@ -2,16 +2,15 @@
 
 
 
+function my_plugin_enqueue_styles() {
+    // Enqueue custom dashboard CSS
+    wp_enqueue_style(
+        'my-plugin-style', 
+        plugin_dir_url(dirname(__FILE__)) . 'public/dashboard/dashboard.css',
+        array(), 
+        time() // Forces cache refresh on every reload
+    );
 
-//ENQUEUING CSS 
-wp_enqueue_style(
-    'my-plugin-style', 
-    plugin_dir_url(dirname(__FILE__)) . 'public/dashboard/dashboard.css',
-    array(), 
-    time() // THIS WILL FORCE CACHE WITH EVERYTIME REFRESH
-);
-
-function my_plugin_enqueue_bootstrap() {
     // Enqueue Bootstrap CSS
     wp_enqueue_style(
         'bootstrap-css', 
@@ -29,11 +28,10 @@ function my_plugin_enqueue_bootstrap() {
         true // Load in footer
     );
 }
-add_action('wp_enqueue_scripts', 'my_plugin_enqueue_bootstrap'); // Use for frontend
-add_action('admin_enqueue_scripts', 'my_plugin_enqueue_bootstrap'); // Use for admin
 
-
-
+// Hook styles and scripts properly
+add_action('wp_enqueue_scripts', 'my_plugin_enqueue_styles'); // For frontend
+add_action('admin_enqueue_scripts', 'my_plugin_enqueue_styles'); // For admin
 
 
 

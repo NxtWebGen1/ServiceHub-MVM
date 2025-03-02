@@ -140,3 +140,9 @@ function servicehub_mvm_register_service_Location_taxonomy() {
     ));
 }
 add_action('init', 'servicehub_mvm_register_service_location_taxonomy');
+
+
+
+
+// Include Gallery Metaboxes
+require_once plugin_dir_path(__FILE__) . 'meta-service-gallery.php';

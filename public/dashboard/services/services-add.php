@@ -72,6 +72,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_title'])) {
                     set_post_thumbnail($post_id, $attachment_id);
                 }
             }
+            
+            // Handle Gallery Uploads
+            if (!empty($_FILES['service_gallery']['name'][0])) {
+                require_once ABSPATH . 'wp-admin/includes/file.php';
+                require_once ABSPATH . 'wp-admin/includes/image.php';
+                require_once ABSPATH . 'wp-admin/includes/media.php';
+
+                $gallery_ids = [];
+
+                foreach ($_FILES['service_gallery']['name'] as $key => $value) {
+                    if ($_FILES['service_gallery']['name'][$key]) {
+                        $file = [
+                            'name'     => $_FILES['service_gallery']['name'][$key],
+                            'type'     => $_FILES['service_gallery']['type'][$key],
+                            'tmp_name' => $_FILES['service_gallery']['tmp_name'][$key],
+                            'error'    => $_FILES['service_gallery']['error'][$key],
+                            'size'     => $_FILES['service_gallery']['size'][$key]
+                        ];
+
+                        $_FILES['gallery_temp'] = $file;
+                        $attachment_id = media_handle_upload('gallery_temp', $post_id);
+
+                        if (!is_wp_error($attachment_id)) {
+                            $gallery_ids[] = $attachment_id;
+                        }
+                    }
+                }
+
+                if (!empty($gallery_ids)) {
+                    update_post_meta($post_id, '_service_gallery', $gallery_ids);
+                }
+            }
+
 
             ob_end_clean();
             wp_safe_redirect(admin_url('admin.php?page=vendor-dashboard&tab=services&success=1'));

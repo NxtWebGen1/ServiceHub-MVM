@@ -74,6 +74,13 @@
             <input type="file" class="form-control" id="service_image" name="service_image">
         </div>
 
+        <!-- Gallery Upload -->
+        <div class="mb-3">
+            <label for="service_gallery" class="form-label">Service Gallery (Upload multiple images)</label>
+            <input type="file" class="form-control" id="service_gallery" name="service_gallery[]" multiple accept="image/*">
+        </div>
+
+
         <?php wp_nonce_field('add_service_action', 'add_service_nonce'); ?>
 
         <!-- Submit Button -->
