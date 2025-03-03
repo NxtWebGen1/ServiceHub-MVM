@@ -34,11 +34,9 @@ add_action('wp_enqueue_scripts', 'my_plugin_enqueue_styles'); // For frontend
 add_action('admin_enqueue_scripts', 'my_plugin_enqueue_styles'); // For admin
 
 
-
-
-
 // Include CPT file
-require_once plugin_dir_path(__FILE__) . '/cpt/cpt-service.php';
+require_once SERVICEHUB_MVM_PLUGIN_PATH . 'includes/cpt/cpt-service.php';
+require_once SERVICEHUB_MVM_PLUGIN_PATH . 'includes/cpt/cpt-service-orders.php';
 
 
 

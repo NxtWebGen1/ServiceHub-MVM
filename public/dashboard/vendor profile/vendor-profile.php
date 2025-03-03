@@ -3,8 +3,6 @@
 <?php
 
 
-// Output the HTML content
-echo 'this is john';
 
 $current_user = wp_get_current_user();  // Get the current logged-in user
 
