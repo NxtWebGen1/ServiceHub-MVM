@@ -38,9 +38,4 @@ add_action('init', 'servicehub_mvm_register_service_orders_cpt');
 
 
 
-
-if (post_type_exists('service_orders')) {
-    error_log('Service Orders CPT registered successfully.');
-} else {
-    error_log('Service Orders CPT failed to register.');
-}
+require_once plugin_dir_path(__FILE__) . 'meta-box-service-orders.php';
