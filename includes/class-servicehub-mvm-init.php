@@ -54,3 +54,6 @@ function servicehub_mvm_load_single_service_template($template) {
 add_filter('template_include', 'servicehub_mvm_load_single_service_template');
 
 
+
+//including service booking form handler   
+require_once SERVICEHUB_MVM_PLUGIN_PATH . 'public/dashboard/orders/service-booking-handler.php';

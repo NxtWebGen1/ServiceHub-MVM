@@ -1,15 +1,14 @@
 <!-- Add in <head> section -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-
 <?php
 // Template for displaying service archive
-// Get all services
 $args = array(
     'post_type'      => 'service',
-    'posts_per_page' => -1, // Display all services
+    'posts_per_page' => -1, // Show all services
     'orderby'        => 'date',
-    'order'          => 'DESC'
+    'order'          => 'DESC',
+    'post_status'    => 'publish' // Ensure only published services appear
 );
 
 $query = new WP_Query($args);
