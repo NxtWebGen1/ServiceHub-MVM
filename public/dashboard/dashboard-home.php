@@ -9,6 +9,8 @@ function vendor_dashboard_menu() {
         <h2 class="nav-tab-wrapper">
             <a href="?page=vendor-dashboard&tab=profile" class="nav-tab <?php echo (!isset($_GET['tab']) || $_GET['tab'] == 'profile') ? 'nav-tab-active' : ''; ?>">Profile</a>
             <a href="?page=vendor-dashboard&tab=services" class="nav-tab <?php echo (isset($_GET['tab']) && $_GET['tab'] == 'services') ? 'nav-tab-active' : ''; ?>">Services</a>
+            <a href="?page=vendor-dashboard&tab=orders" class="nav-tab <?php echo (isset($_GET['tab']) && $_GET['tab'] == 'Orders') ? 'nav-tab-active' : ''; ?>">Orders</a>
+
         </h2>
 
         <div class="vendor-dashboard-content">
@@ -24,6 +26,10 @@ function vendor_dashboard_menu() {
             } elseif ($tab == 'edit-service' && isset($_GET['edit_service'])) {
                 include SERVICEHUB_MVM_PLUGIN_PATH . 'public/dashboard/services/services-edit.php'; // Edit Service Page
             }
+                
+            elseif ($tab == 'orders') {
+                include SERVICEHUB_MVM_PLUGIN_PATH . 'public/dashboard/Orders/order-main.php'; // order Page
+            } 
             ?>
         </div>
     </div>
