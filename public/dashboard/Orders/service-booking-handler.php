@@ -20,6 +20,8 @@ function servicehub_mvm_handle_booking_submission() {
         $date = sanitize_text_field($_POST['date']);
         $message = sanitize_textarea_field($_POST['message']);
         $service_id = intval($_POST['service_id']);
+        $vendor_id = !empty($_POST['vendor_id']) ? intval($_POST['vendor_id']) : get_post_field('post_author', $service_id); 
+
 
         if (empty($name) || empty($email) || empty($phone) || empty($date)) {
             wp_send_json_error(['message' => 'Please fill in all required fields.']);
@@ -32,12 +34,13 @@ function servicehub_mvm_handle_booking_submission() {
             'post_status' => 'pending',
             'meta_input'  => [
                 '_service_id'  => $service_id,
+                '_vendor_id' => $vendor_id,
                 '_customer_name' => $name,
                 '_customer_email' => $email,
                 '_customer_phone' => $phone,
                 '_customer_address' => $address,
                 '_preferred_date' => $date,
-                '_additional_message' => $message,
+                '_order_notes' => $message,
                 '_order_status' => 'pending',
             ],
         ]);

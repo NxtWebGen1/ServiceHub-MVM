@@ -96,6 +96,8 @@ get_header();
                 </div>
 
                 <input type="hidden" name="service_id" value="<?php echo get_the_ID(); ?>">
+                <input type="hidden" name="vendor_id" value="<?php echo get_the_author_meta('ID'); ?>"> 
+
 
                 <button type="submit" class="btn btn-success w-100">Submit Booking</button>
             </form>
@@ -132,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (data.success) {
                 document.getElementById('booking-success').classList.remove('d-none');
                 this.reset(); // Reset form fields
-            } else {
+            } else {    
                 alert("Error: " + data.message);
             }
         })
