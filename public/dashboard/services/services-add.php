@@ -107,7 +107,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_title'])) {
 
 
             ob_end_clean();
-            wp_safe_redirect(admin_url('admin.php?page=vendor-dashboard&tab=services&success=1'));
+            // wp_safe_redirect(admin_url('admin.php?page=vendor-dashboard&tab=services&success=1'));
+            echo '<script>window.location.href = "' . admin_url('admin.php?page=vendor-dashboard&tab=services') . '";</script>';            
             exit;
         } else {
             $errors[] = 'Failed to add service. Please try again.';

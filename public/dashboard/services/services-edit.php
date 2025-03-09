@@ -88,8 +88,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_service_nonce']))
 
 
     // Redirect after successful update
-    wp_redirect("?page=vendor-dashboard&tab=services&updated=true");
+    // wp_redirect("?page=vendor-dashboard&tab=services&updated=true");
+    echo '<script>window.location.href = "' . admin_url('admin.php?page=vendor-dashboard&tab=services') . '";</script>';            
     exit;
+
 }
 
 // Include the edit service template
