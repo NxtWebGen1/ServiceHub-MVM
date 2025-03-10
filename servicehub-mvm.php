@@ -107,6 +107,5 @@ add_filter('archive_template', function($archive_template) {
 
 
 
-
-
-
+//INlciding this file , this file create approve / disapprove new vendor fnctionality 
+require_once plugin_dir_path(__FILE__) . 'admin/vendor-approval-handler.php';

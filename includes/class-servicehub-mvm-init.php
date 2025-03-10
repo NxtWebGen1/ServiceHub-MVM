@@ -57,3 +57,6 @@ add_filter('template_include', 'servicehub_mvm_load_single_service_template');
 
 //including service booking form handler   
 require_once SERVICEHUB_MVM_PLUGIN_PATH . 'public/dashboard/orders/service-booking-handler.php';
+
+//INcluding Restrict-vendor-login gile,
+require_once plugin_dir_path(__FILE__) . '/restrict-vendor-login.php';
