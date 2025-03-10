@@ -20,8 +20,8 @@ function servicehub_mvm_handle_booking_submission() {
         $date = sanitize_text_field($_POST['date']);
         $message = sanitize_textarea_field($_POST['message']);
         $service_id = intval($_POST['service_id']);
-        $vendor_id = !empty($_POST['vendor_id']) ? intval($_POST['vendor_id']) : get_post_field('post_author', $service_id); 
-
+        $vendor_id = !empty($_POST['vendor_id']) ? intval($_POST['vendor_id']) : get_post_field('post_author', $service_id);
+        $vendor_email = get_the_author_meta('user_email', $vendor_id); // Get vendor's email
 
         if (empty($name) || empty($email) || empty($phone) || empty($date)) {
             wp_send_json_error(['message' => 'Please fill in all required fields.']);
@@ -46,20 +46,51 @@ function servicehub_mvm_handle_booking_submission() {
         ]);
 
         if ($order_id) {
-            // Send confirmation email
+            // Admin Email
             $admin_email = get_option('admin_email');
-            $subject = "New Service Booking Request";
-            $body = "A new booking has been submitted.\n\n".
-                    "Service ID: $service_id\n".
-                    "Name: $name\n".
-                    "Email: $email\n".
-                    "Phone: $phone\n".
-                    "Address: $address\n".
-                    "Preferred Date: $date\n".
-                    "Message: $message\n\n".
-                    "Please check the dashboard for details.";
+            $admin_subject = "New Service Booking Request";
+            $admin_body = "
+                <h2>New Booking Submitted</h2>
+                <p><strong>Service ID:</strong> $service_id</p>
+                <p><strong>Name:</strong> $name</p>
+                <p><strong>Email:</strong> $email</p>
+                <p><strong>Phone:</strong> $phone</p>
+                <p><strong>Address:</strong> $address</p>
+                <p><strong>Preferred Date:</strong> $date</p>
+                <p><strong>Message:</strong> $message</p>
+                <p>Please check the dashboard for details.</p>";
+            
+            // Vendor Email
+            $vendor_subject = "New Order Received for Your Service";
+            $vendor_body = "
+                <h2>You Have a New Order</h2>
+                <p><strong>Service ID:</strong> $service_id</p>
+                <p><strong>Customer Name:</strong> $name</p>
+                <p><strong>Customer Email:</strong> $email</p>
+                <p><strong>Customer Phone:</strong> $phone</p>
+                <p><strong>Preferred Date:</strong> $date</p>
+                <p><strong>Message from Customer:</strong> $message</p>
+                <p>Login to your vendor dashboard to manage this order.</p>";
+            
+            // Customer Email
+            $customer_subject = "Your Order Confirmation - Service ID: $service_id";
+            $customer_body = "
+                <h2>Order Confirmation</h2>
+                <p>Hi $name,</p>
+                <p>Thank you for booking our service. Here are your order details:</p>
+                <p><strong>Service ID:</strong> $service_id</p>
+                <p><strong>Vendor Contact:</strong> $vendor_email</p>
+                <p><strong>Preferred Date:</strong> $date</p>
+                <p><strong>Your Message:</strong> $message</p>
+                <p>The vendor will contact you soon for further details.</p>";
 
-            wp_mail($admin_email, $subject, $body);
+            // Email headers
+            $headers = ['Content-Type: text/html; charset=UTF-8'];
+
+            // Send emails
+            wp_mail($admin_email, $admin_subject, $admin_body, $headers);
+            wp_mail($vendor_email, $vendor_subject, $vendor_body, $headers);
+            wp_mail($email, $customer_subject, $customer_body, $headers);
 
             wp_send_json_success(['message' => 'Booking request submitted successfully!']);
         } else {
@@ -71,4 +102,3 @@ function servicehub_mvm_handle_booking_submission() {
 // Hook into AJAX (for logged-in and non-logged-in users)
 add_action('wp_ajax_servicehub_mvm_book_service', 'servicehub_mvm_handle_booking_submission');
 add_action('wp_ajax_nopriv_servicehub_mvm_book_service', 'servicehub_mvm_handle_booking_submission');
-
