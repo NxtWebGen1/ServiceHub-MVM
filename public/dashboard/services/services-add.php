@@ -105,6 +105,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_title'])) {
                 }
             }
 
+            // 🚀 Send Notification to Admin
+                $admin_email = get_option('admin_email');
+                $vendor_info = get_userdata($current_vendor_id);
+
+                $subject = "New Service Added: " . get_the_title($post_id);
+                $message = "Hello Admin,\n\n";
+                $message .= "A new service has been added by Vendor: " . $vendor_info->display_name . " (" . $vendor_info->user_email . ").\n\n";
+                $message .= "Service Details:\n";
+                $message .= "Title: " . get_the_title($post_id) . "\n";
+                $message .= "Description: " . get_the_excerpt($post_id) . "\n";
+                $message .= "Price: " . get_post_meta($post_id, '_service_price', true) . "\n";
+                $message .= "View Service: " . get_permalink($post_id) . "\n\n";
+                $message .= "Regards,\nYour Website Team";
+                
+                wp_mail($admin_email, $subject, $message);
+
 
             ob_end_clean();
             // wp_safe_redirect(admin_url('admin.php?page=vendor-dashboard&tab=services&success=1'));
