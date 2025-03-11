@@ -8,12 +8,17 @@ add_filter('manage_users_columns', 'servicehub_mvm_vendor_approval_column');
 
 function servicehub_mvm_vendor_approval_column_content($value, $column_name, $user_id) {
     if ($column_name === 'vendor_approval') {
+        $user = get_userdata($user_id);
+
+        // ✅ Ensure admins always show "Approved"
+        if (in_array('administrator', $user->roles)) {
+            return '✅ Approved'; // Force admin to always be "Approved"
+        }
+
         $status = get_user_meta($user_id, '_vendor_approval_status', true);
 
         // Handle cases where _vendor_approval_status is missing
         if (!$status) {
-            // Check if user has the 'vendor' role (assume approved if vendor)
-            $user = get_userdata($user_id);
             if (in_array('vendor', $user->roles)) {
                 update_user_meta($user_id, '_vendor_approval_status', 'approved'); // Set default to approved
                 return '✅ Approved';
@@ -34,6 +39,7 @@ function servicehub_mvm_vendor_approval_column_content($value, $column_name, $us
     }
     return $value;
 }
+
 
 add_filter('manage_users_custom_column', 'servicehub_mvm_vendor_approval_column_content', 10, 3);
 
