@@ -43,4 +43,16 @@ function servicehub_mvm_create_pages() {
             'post_type'     => 'page'
         ]);
     }
+
+    // Check if a page with the slug 'vendor-registration-pending' already exists
+    if (!get_page_by_path('vendor-registration-pending')) {
+        // Create the page
+        wp_insert_post([
+            'post_title'   => 'Vendor Registration Pending',
+            'post_name'    => 'vendor-registration-pending',
+            'post_content' => 'Thank you for registering! Your account is under review. We will notify you once approved.',
+            'post_status'  => 'publish',
+            'post_type'    => 'page'
+        ]);
+    }
 }
