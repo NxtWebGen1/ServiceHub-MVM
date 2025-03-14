@@ -109,3 +109,11 @@ add_filter('archive_template', function($archive_template) {
 
 //INlciding this file , this file create approve / disapprove new vendor fnctionality 
 require_once plugin_dir_path(__FILE__) . 'admin/vendor-approval-handler.php';
+
+
+add_action('after_setup_theme', 'remove_admin_bar');
+function remove_admin_bar() {
+if (!current_user_can('administrator') && !is_admin()) {
+show_admin_bar(false);
+}
+}        
