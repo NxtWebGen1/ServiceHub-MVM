@@ -16,9 +16,16 @@ $service_data = [
     'title'        => '',
     'description'  => '',
     'price'        => '',
+    'price_unit'   => '',
+    'discount_price' => '',
+    'duration'     => '',
     'availability' => '',
     'location'     => '',
     'service_type' => '',
+    'payment_type' => '',
+    'availability_type' => '',
+    'max_bookings' => '',
+    'status'       => ''
 ];
 
 // Handle form submission
@@ -31,9 +38,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_title'])) {
     $title = sanitize_text_field($_POST['service_title']);
     $description = sanitize_textarea_field($_POST['service_description']);
     $price = isset($_POST['service_price']) ? sanitize_text_field($_POST['service_price']) : '';
+    $price_unit = sanitize_text_field($_POST['service_price_unit']);
+    $discount_price = sanitize_text_field($_POST['service_discount_price']);
+    $duration = sanitize_text_field($_POST['service_duration']);
     $availability = sanitize_text_field($_POST['service_availability']);
     $location = isset($_POST['service_location']) ? intval($_POST['service_location']) : 0;
     $service_type = isset($_POST['service_type']) ? intval($_POST['service_type']) : 0;
+    $payment_type = sanitize_text_field($_POST['service_payment_type']);
+    $availability_type = sanitize_text_field($_POST['service_availability_type']);
+    $max_bookings = sanitize_text_field($_POST['service_max_bookings']);
+    $status = sanitize_text_field($_POST['service_status']);
 
     if (empty($title) || empty($description) || empty($availability) || empty($location) || empty($service_type)) {
         $errors[] = 'Please fill in all required fields.';
@@ -52,7 +66,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_title'])) {
 
         if ($post_id) {
             update_post_meta($post_id, '_service_price', $price);
+            update_post_meta($post_id, '_service_price_unit', $price_unit);
+            update_post_meta($post_id, '_service_discount_price', $discount_price);
+            update_post_meta($post_id, '_service_duration', $duration);
             update_post_meta($post_id, '_service_schedule', $availability);
+            update_post_meta($post_id, '_service_payment_type', $payment_type);
+            update_post_meta($post_id, '_service_availability_type', $availability_type);
+            update_post_meta($post_id, '_service_max_bookings', $max_bookings);
+            update_post_meta($post_id, '_service_status', $status);
 
             if ($location) {
                 wp_set_post_terms($post_id, [$location], 'service_location');
@@ -105,25 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_title'])) {
                 }
             }
 
-            // 🚀 Send Notification to Admin
-                $admin_email = get_option('admin_email');
-                $vendor_info = get_userdata($current_vendor_id);
-
-                $subject = "New Service Added: " . get_the_title($post_id);
-                $message = "Hello Admin,\n\n";
-                $message .= "A new service has been added by Vendor: " . $vendor_info->display_name . " (" . $vendor_info->user_email . ").\n\n";
-                $message .= "Service Details:\n";
-                $message .= "Title: " . get_the_title($post_id) . "\n";
-                $message .= "Description: " . get_the_excerpt($post_id) . "\n";
-                $message .= "Price: " . get_post_meta($post_id, '_service_price', true) . "\n";
-                $message .= "View Service: " . get_permalink($post_id) . "\n\n";
-                $message .= "Regards,\nYour Website Team";
-                
-                wp_mail($admin_email, $subject, $message);
-
-
             ob_end_clean();
-            // wp_safe_redirect(admin_url('admin.php?page=vendor-dashboard&tab=services&success=1'));
             echo '<script>window.location.href = "' . admin_url('admin.php?page=vendor-dashboard&tab=services') . '";</script>';            
             exit;
         } else {

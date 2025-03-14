@@ -21,7 +21,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_service_nonce']))
     $service_title = sanitize_text_field($_POST['service_title']);
     $service_description = sanitize_textarea_field($_POST['service_description']);
     $service_price = sanitize_text_field($_POST['service_price']);
+    $service_price_unit = sanitize_text_field($_POST['service_price_unit']);
+    $service_discount_price = sanitize_text_field($_POST['service_discount_price']);
+    $service_duration = sanitize_text_field($_POST['service_duration']);
     $service_availability = sanitize_text_field($_POST['service_availability']);
+    $service_payment_type = sanitize_text_field($_POST['service_payment_type']);
+    $service_availability_type = sanitize_text_field($_POST['service_availability_type']);
+    $service_max_bookings = sanitize_text_field($_POST['service_max_bookings']);
+    $service_status = sanitize_text_field($_POST['service_status']);
     $service_location = intval($_POST['service_location']);
     $service_type = intval($_POST['service_type']);
 
@@ -32,7 +39,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_service_nonce']))
     ));
 
     update_post_meta($service_id, '_service_price', $service_price);
+    update_post_meta($service_id, '_service_price_unit', $service_price_unit);
+    update_post_meta($service_id, '_service_discount_price', $service_discount_price);
+    update_post_meta($service_id, '_service_duration', $service_duration);
     update_post_meta($service_id, '_service_schedule', $service_availability);
+    update_post_meta($service_id, '_service_payment_type', $service_payment_type);
+    update_post_meta($service_id, '_service_availability_type', $service_availability_type);
+    update_post_meta($service_id, '_service_max_bookings', $service_max_bookings);
+    update_post_meta($service_id, '_service_status', $service_status);
     wp_set_post_terms($service_id, array($service_location), 'service_location');
     wp_set_post_terms($service_id, array($service_type), 'service_type');
 
@@ -85,13 +99,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_service_nonce']))
         }
     }
 
-
-
     // Redirect after successful update
-    // wp_redirect("?page=vendor-dashboard&tab=services&updated=true");
     echo '<script>window.location.href = "' . admin_url('admin.php?page=vendor-dashboard&tab=services') . '";</script>';            
     exit;
-
 }
 
 // Include the edit service template

@@ -33,55 +33,6 @@ add_action('init', 'servicehub_mvm_register_service_cpt');
 
 
 
-// =========================================Registering PRICE METABOX=================================================
-// Register Meta Box for Price
-function servicehub_mvm_register_price_meta_box() {
-    add_meta_box('service_price_meta_box', 'Service Price', 'servicehub_mvm_price_meta_box_callback', 'service', 'side');
-}
-add_action('add_meta_boxes', 'servicehub_mvm_register_price_meta_box');
-
-// Meta Box Callback
-function servicehub_mvm_price_meta_box_callback($post) {
-    $price = get_post_meta($post->ID, '_service_price', true);
-    echo '<label for="service_price">Price:</label>';
-    echo '<input type="number" id="service_price" name="service_price" value="' . esc_attr($price) . '" style="width:100%;" />';
-}
-
-// Save Price Meta Box Data
-function servicehub_mvm_save_price_meta_box($post_id) {
-    if (isset($_POST['service_price'])) {
-        update_post_meta($post_id, '_service_price', sanitize_text_field($_POST['service_price']));
-    }
-}
-add_action('save_post', 'servicehub_mvm_save_price_meta_box');
-
-
-
-
-// =========================================Registering AVAILABILITY METABOX=================================================
-// Register Meta Box for Availability Schedule
-function servicehub_mvm_register_schedule_meta_box() {
-    add_meta_box('service_schedule_meta_box', 'Availability Schedule', 'servicehub_mvm_schedule_meta_box_callback', 'service', 'normal');
-}
-add_action('add_meta_boxes', 'servicehub_mvm_register_schedule_meta_box');
-
-// Meta Box Callback
-function servicehub_mvm_schedule_meta_box_callback($post) {
-    $schedule = get_post_meta($post->ID, '_service_schedule', true);
-    echo '<label for="service_schedule">Enter Availability Schedule:</label>';
-    echo '<textarea id="service_schedule" name="service_schedule" rows="5" style="width:100%;">' . esc_textarea($schedule) . '</textarea>';
-}
-
-// Save Schedule Meta Box Data
-function servicehub_mvm_save_schedule_meta_box($post_id) {
-    if (isset($_POST['service_schedule'])) {
-        update_post_meta($post_id, '_service_schedule', sanitize_textarea_field($_POST['service_schedule']));
-    }
-}
-add_action('save_post', 'servicehub_mvm_save_schedule_meta_box');
-
-
-
 
 
 
@@ -146,3 +97,6 @@ add_action('init', 'servicehub_mvm_register_service_location_taxonomy');
 
 // Include Gallery Metaboxes
 require_once plugin_dir_path(__FILE__) . 'meta-service-gallery.php';
+
+// Include Meta Fields
+require_once plugin_dir_path(__FILE__) . 'cpt-service-meta-fields.php';

@@ -1,5 +1,4 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRuOFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
 <div class="container mt-4">
     <h2 class="mb-4">Add New Service</h2>
@@ -21,6 +20,29 @@
         <div class="mb-3">
             <label for="service_price" class="form-label">Price (Leave empty for quote)</label>
             <input type="text" class="form-control" id="service_price" name="service_price">
+        </div>
+
+        <!-- Price Unit -->
+        <div class="mb-3">
+            <label for="service_price_unit" class="form-label">Price Unit</label>
+            <select class="form-control" id="service_price_unit" name="service_price_unit">
+                <option value="Fixed Price">Fixed Price</option>
+                <option value="Per Hour">Per Hour</option>
+                <option value="Per Day">Per Day</option>
+                <option value="Per Session">Per Session</option>
+            </select>
+        </div>
+
+        <!-- Discount Price -->
+        <div class="mb-3">
+            <label for="service_discount_price" class="form-label">Discount Price</label>
+            <input type="number" class="form-control" id="service_discount_price" name="service_discount_price" min="0">
+        </div>
+
+        <!-- Service Duration -->
+        <div class="mb-3">
+            <label for="service_duration" class="form-label">Service Duration</label>
+            <input type="text" class="form-control" id="service_duration" name="service_duration" placeholder="e.g., 30 mins, 1 hour" required>
         </div>
 
         <!-- Service Location (Dropdown) -->
@@ -61,6 +83,40 @@
             </select>
         </div>
 
+        <!-- Payment Type -->
+        <div class="mb-3">
+            <label for="service_payment_type" class="form-label">Payment Type</label>
+            <select class="form-control" id="service_payment_type" name="service_payment_type">
+                <option value="One-Time Payment">One-Time Payment</option>
+                <option value="Recurring (Monthly)">Recurring (Monthly)</option>
+                <option value="Recurring (Weekly)">Recurring (Weekly)</option>
+            </select>
+        </div>
+
+        <!-- Availability Type -->
+        <div class="mb-3">
+            <label for="service_availability_type" class="form-label">Availability Type</label>
+            <select class="form-control" id="service_availability_type" name="service_availability_type">
+                <option value="Online Service">Online Service</option>
+                <option value="In-Person Service">In-Person Service</option>
+                <option value="Both">Both</option>
+            </select>
+        </div>
+
+        <!-- Max Bookings Per Day -->
+        <div class="mb-3">
+            <label for="service_max_bookings" class="form-label">Max Number of Bookings Per Day</label>
+            <input type="number" class="form-control" id="service_max_bookings" name="service_max_bookings" min="1">
+        </div>
+
+        <!-- Service Status -->
+        <div class="mb-3">
+            <label for="service_status" class="form-label">Service Status</label>
+            <select class="form-control" id="service_status" name="service_status">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
+        </div>
 
         <!-- Availability -->
         <div class="mb-3">
@@ -79,7 +135,6 @@
             <label for="service_gallery" class="form-label">Service Gallery (Upload multiple images)</label>
             <input type="file" class="form-control" id="service_gallery" name="service_gallery[]" multiple accept="image/*">
         </div>
-
 
         <?php wp_nonce_field('add_service_action', 'add_service_nonce'); ?>
 
