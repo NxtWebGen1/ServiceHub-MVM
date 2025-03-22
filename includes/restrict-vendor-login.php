@@ -27,7 +27,7 @@ function servicehub_mvm_redirect_vendor_login() {
         exit;
     }
 }
-add_action('init', 'servicehub_mvm_redirect_vendor_login');
+add_action('init', 'servicehub_mvm_redirect_vendor_login');  
 
 
 
