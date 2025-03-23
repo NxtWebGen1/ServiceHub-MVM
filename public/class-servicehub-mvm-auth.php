@@ -87,97 +87,144 @@ function servicehub_mvm_handle_vendor_login() {
 
 // REGISTRATION FORM HANDLING
 function handle_vendor_registration() {
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register_button'])) {
-        // Sanitize input data
-        $full_name = sanitize_text_field($_POST['full_name']);
-        $email = sanitize_email($_POST['email']);
-        $phone = sanitize_text_field($_POST['phone']);
-        $business_name = sanitize_text_field($_POST['business_name']);
-        $website = esc_url($_POST['website']);
-        $service_location = sanitize_text_field($_POST['service_location']);
-        $password = $_POST['password'];
-        $confirm_password = $_POST['confirm_password'];
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['register_button'])) {
 
-        // Validate input fields
+        // Sanitize & gather input
+        $full_name         = sanitize_text_field($_POST['full_name']);
+        $email             = sanitize_email($_POST['email']);
+        $phone             = sanitize_text_field($_POST['phone']);
+        $password          = $_POST['password'];
+        $confirm_password  = $_POST['confirm_password'];
+
+        $business_name     = sanitize_text_field($_POST['business_name']);
+        $business_category = sanitize_text_field($_POST['business_category']);
+        $years_in_business = sanitize_text_field($_POST['years_in_business']);
+        $website           = esc_url($_POST['website']);
+        $social_links      = sanitize_text_field($_POST['social_links']);
+        $service_location  = sanitize_text_field($_POST['service_location']);
+        $street_address    = sanitize_text_field($_POST['street_address']);
+        $service_radius    = sanitize_text_field($_POST['service_radius']);
+        $gender            = sanitize_text_field($_POST['gender']);
+        $emergency_contact = sanitize_text_field($_POST['emergency_contact']);
+
+      
+
+
         $errors = [];
 
-        if (empty($full_name) || empty($email) || empty($phone) || empty($password) || empty($confirm_password) || empty($service_location)) {
-            $errors[] = 'Error: All required fields must be filled.';
+        //  Validate required fields
+        if (empty($full_name) || empty($email) || empty($phone) || empty($password) || empty($confirm_password)) {
+            $errors[] = 'All personal fields are required.';
         }
-
+        if (empty($business_name) || empty($business_category)) {
+            $errors[] = 'Business Name and Category are required.';
+        }
+        if (empty($service_location)) {
+            $errors[] = 'City / Service Location is required.';
+        }
+        if (empty($gender)) {
+            $errors[] = 'Gender is required.';
+        }
         if (!is_email($email)) {
-            $errors[] = 'Error: Invalid email address.';
+            $errors[] = 'Invalid email format.';
         }
-
         if (email_exists($email)) {
-            $errors[] = 'Error: Email is already registered.';
+            $errors[] = 'Email is already registered.';
         }
-
         if ($password !== $confirm_password) {
-            $errors[] = 'Error: Passwords do not match.';
+            $errors[] = 'Passwords do not match.';
         }
+        
 
         if (!empty($errors)) {
             wp_die(implode('<br>', $errors));
         }
 
-        // Create new user with 'subscriber' role (temporary until approved)
+        //  Create the user
         $user_id = wp_insert_user([
-            'user_login'   => sanitize_user($full_name, true), // Ensure valid username
+            'user_login'   => sanitize_user($full_name, true),
             'user_email'   => $email,
             'user_pass'    => $password,
             'display_name' => $full_name,
-            'role'         => 'subscriber' // Vendor gets 'subscriber' role until approved
+            'role'         => 'subscriber',
         ]);
 
         if (is_wp_error($user_id)) {
-            wp_die('Error: Could not create user. ' . $user_id->get_error_message());
+            wp_die('User creation failed: ' . $user_id->get_error_message());
         }
 
-        // Store vendor details & approval status
+        //  Store meta fields
         update_user_meta($user_id, '_vendor_approval_status', 'pending');
         update_user_meta($user_id, 'phone', $phone);
         update_user_meta($user_id, 'business_name', $business_name);
+        update_user_meta($user_id, 'business_category', $business_category);
+        update_user_meta($user_id, 'years_in_business', $years_in_business);
         update_user_meta($user_id, 'website', $website);
+        update_user_meta($user_id, 'social_links', $social_links);
         update_user_meta($user_id, 'service_location', $service_location);
+        update_user_meta($user_id, 'street_address', $street_address);
+        update_user_meta($user_id, 'service_radius', $service_radius);
+        update_user_meta($user_id, 'gender', $gender);
+        update_user_meta($user_id, 'emergency_contact', $emergency_contact);
 
-        // ✅ Check if a profile picture file has been uploaded
-        if (!empty($_FILES['profile_picture']['name'])) { 
-            require_once(ABSPATH . 'wp-admin/includes/file.php'); // Include WP file handling functions
+        //  Handle File Uploads
+        require_once(ABSPATH . 'wp-admin/includes/file.php');
 
-            $uploaded = wp_handle_upload($_FILES['profile_picture'], ['test_form' => false]);
-
-            if (isset($uploaded['file'])) { 
-                $attachment = [
-                    'post_mime_type' => $uploaded['type'],
-                    'post_title'     => basename($uploaded['file']),
-                    'post_content'   => '',
+        // Profile Picture
+        if (!empty($_FILES['profile_picture']['name'])) {
+            $upload = wp_handle_upload($_FILES['profile_picture'], ['test_form' => false]);
+            if (!isset($upload['error'])) {
+                $attachment_id = wp_insert_attachment([
+                    'post_mime_type' => $upload['type'],
+                    'post_title'     => basename($upload['file']),
                     'post_status'    => 'inherit'
-                ];
-
-                $attach_id = wp_insert_attachment($attachment, $uploaded['file']); 
-                $image_url = wp_get_attachment_url($attach_id);  
-
-                update_user_meta($user_id, 'profile_picture', $image_url);
+                ], $upload['file']);
+                update_user_meta($user_id, 'profile_picture', wp_get_attachment_url($attachment_id));
             }
         }
 
-        // ✅ Notify Admin
+        // Portfolio Upload
+        if (!empty($_FILES['portfolio_upload']['name'])) {
+            $upload = wp_handle_upload($_FILES['portfolio_upload'], ['test_form' => false]);
+            if (!isset($upload['error'])) {
+                $attachment_id = wp_insert_attachment([
+                    'post_mime_type' => $upload['type'],
+                    'post_title'     => basename($upload['file']),
+                    'post_status'    => 'inherit'
+                ], $upload['file']);
+                update_user_meta($user_id, 'portfolio_upload', wp_get_attachment_url($attachment_id));
+            }
+        }
+
+        // National ID
+        if (!empty($_FILES['national_id']['name'])) {
+            $upload = wp_handle_upload($_FILES['national_id'], ['test_form' => false]);
+            if (!isset($upload['error'])) {
+                $attachment_id = wp_insert_attachment([
+                    'post_mime_type' => $upload['type'],
+                    'post_title'     => basename($upload['file']),
+                    'post_status'    => 'inherit'
+                ], $upload['file']);
+                update_user_meta($user_id, 'national_id', wp_get_attachment_url($attachment_id));
+            }
+        }
+
+        //  Notify Admin
         $admin_email = get_option('admin_email');
-        $subject = "New Vendor Registration Approval Needed";
-        $message = "A new vendor has registered and requires approval.\n\n".
-                   "Vendor Name: $full_name\n".
-                   "Email: $email\n\n".
-                   "Approve or Reject via Users > All Users in WP Dashboard.";
+        $subject = "New Vendor Registration – Approval Needed";
+        $message = "A new vendor has registered:\n\n" .
+                   "Name: $full_name\nEmail: $email\nBusiness: $business_name\n\n" .
+                   "Login to review and approve.";
 
         wp_mail($admin_email, $subject, $message);
 
-        // ✅ Redirect vendor to waiting page
-        wp_redirect(home_url('/vendor-registration-pending')); 
+        //  Redirect
+        wp_redirect(home_url('/vendor-registration-pending'));
         exit;
     }
 }
 add_action('init', 'handle_vendor_registration');
+
 
 
 
