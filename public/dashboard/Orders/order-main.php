@@ -138,8 +138,8 @@ $statuses = [
                                                 <div class="modal-body">
                                                     <div class="row">
                                                         <div class="col-md-6 mb-3">
-                                                            <strong>Service ID:</strong><br>
-                                                            <?php echo esc_html($service_id); ?>
+                                                            <strong>Service Name:</strong><br>
+                                                            <?php echo esc_html(get_the_title($service_id)); ?>
                                                         </div>
                                                         <div class="col-md-6 mb-3">
                                                             <strong>Customer Name:</strong><br>
@@ -159,7 +159,7 @@ $statuses = [
                                                         </div>
                                                         <div class="col-md-6 mb-3">
                                                             <strong>Service Date & Time:</strong><br>
-                                                            <?php echo esc_html($date); ?> at <?php echo esc_html($date); ?>
+                                                            <?php echo esc_html($date); ?>
                                                         </div>
                                                         <div class="col-md-12 mb-3">
                                                             <strong>Additional Notes:</strong><br>
