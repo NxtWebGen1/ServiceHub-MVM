@@ -35,18 +35,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['order_id'], $_POST['n
     }
 }
 
-function get_orders_by_status($status, $user_id) {
+function get_orders_by_status($status, $vendor_id) {
     return new WP_Query([
         'post_type' => 'service_orders',
-        'author' => $user_id,
-        'meta_query' => [[
-            'key' => '_order_status',
-            'value' => $status,
-            'compare' => '='
-        ]],
-        'posts_per_page' => -1
+        'posts_per_page' => -1,
+        'meta_query' => [
+            [
+                'key' => '_order_status',
+                'value' => $status,
+                'compare' => '='
+            ],
+            [
+                'key' => '_vendor_id',
+                'value' => $vendor_id,
+                'compare' => '='
+            ]
+        ]
     ]);
 }
+
 
 $statuses = [
     'pending'   => ['title' => 'Pending Orders', 'color' => 'warning'],

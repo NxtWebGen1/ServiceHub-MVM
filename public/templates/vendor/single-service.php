@@ -111,37 +111,54 @@ get_header();
     <?php endwhile; endif; ?>
 </div>
 
+
+<script>
+    const ajaxUrl = "<?php echo admin_url('admin-ajax.php'); ?>";
+</script>
+
+
 <!-- JavaScript to Toggle Form Visibility -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById('book-now-btn').addEventListener('click', function() {
-        document.getElementById('service-booking-container').classList.toggle('d-none');
+    const bookBtn = document.getElementById('book-now-btn');
+    const formContainer = document.getElementById('service-booking-container');
+    const formEl = document.getElementById('service-booking-form');
+    const successMsg = document.getElementById('booking-success');
+
+    bookBtn.addEventListener('click', function () {
+        formContainer.classList.toggle('d-none');
+        successMsg.classList.add('d-none'); // hide old success message if visible
     });
 
-    // Handle form submission via AJAX
-    document.getElementById('service-booking-form').addEventListener('submit', function(e) {
+    formEl.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        let formData = new FormData(this);
-        formData.append('action', 'servicehub_mvm_book_service'); // WordPress AJAX action
+        const formData = new FormData(formEl);
+        formData.append('action', 'servicehub_mvm_book_service');
 
-        fetch('<?php echo admin_url("admin-ajax.php"); ?>', {
-            method: 'POST',
-            body: formData
-        })
+        fetch(ajaxUrl, {
+    method: 'POST',
+    body: formData
+})
+
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                document.getElementById('booking-success').classList.remove('d-none');
-                this.reset(); // Reset form fields
-            } else {    
-                alert("Error: " + data.message);
+                formEl.classList.add('d-none');             // ✅ hide form
+                successMsg.classList.remove('d-none');      // ✅ show message
+                formEl.reset();
+            } else {
+                alert('❌ ' + (data.message || 'Something went wrong.'));
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Booking error:', error);
+            alert('❌ Network error. Try again.');
+        });
     });
 });
 </script>
+
 
 <?php
 get_footer();

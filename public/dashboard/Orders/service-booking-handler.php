@@ -5,6 +5,9 @@ if (!defined('ABSPATH')) {
 
 // Handle the service booking form submission
 function servicehub_mvm_handle_booking_submission() {
+    ob_clean(); // clean any accidental output
+header('Content-Type: application/json'); // ensure JSON response
+
     if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['service_booking_nonce'])) {
         
         // Verify nonce for security
@@ -87,12 +90,23 @@ function servicehub_mvm_handle_booking_submission() {
             // Email headers
             $headers = ['Content-Type: text/html; charset=UTF-8'];
 
-            // Send emails
-            wp_mail($admin_email, $admin_subject, $admin_body, $headers);
-            wp_mail($vendor_email, $vendor_subject, $vendor_body, $headers);
-            wp_mail($email, $customer_subject, $customer_body, $headers);
+            // Send response FIRST
+wp_send_json_success(['message' => 'Booking request submitted successfully!']);
 
-            wp_send_json_success(['message' => 'Booking request submitted successfully!']);
+// Defer emails to run after response
+add_action('shutdown', function () use (
+    $admin_email, $vendor_email, $email,
+    $admin_subject, $admin_body,
+    $vendor_subject, $vendor_body,
+    $customer_subject, $customer_body,
+    $headers
+) {
+    wp_mail($admin_email, $admin_subject, $admin_body, $headers);
+    wp_mail($vendor_email, $vendor_subject, $vendor_body, $headers);
+    wp_mail($email, $customer_subject, $customer_body, $headers);
+});
+exit;
+
         } else {
             wp_send_json_error(['message' => 'Failed to submit booking.']);
         }
