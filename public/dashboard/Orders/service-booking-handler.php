@@ -34,7 +34,7 @@ header('Content-Type: application/json'); // ensure JSON response
         $order_id = wp_insert_post([
             'post_title'  => 'Booking: ' . $name,
             'post_type'   => 'service_orders',
-            'post_status' => 'pending',
+            'post_status' => 'publish',
             'meta_input'  => [
                 '_service_id'  => $service_id,
                 '_vendor_id' => $vendor_id,
