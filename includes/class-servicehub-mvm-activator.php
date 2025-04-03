@@ -15,7 +15,11 @@
         'edit_published_posts'   => true,
         'delete_published_posts' => true,
     ]);
+    add_role('customer', 'Customer', [
+        'read' => true, // Basic access
+    ]);
 }
+
 
 
 
@@ -55,4 +59,26 @@ function servicehub_mvm_create_pages() {
             'post_type'    => 'page'
         ]);
     }
+
+        // Create Customer Login Page if not exists
+        if (!get_page_by_title('Customer Login')) {
+            wp_insert_post([
+                'post_title'    => 'Customer Login',
+                'post_content'  => '[customer_login_form]',
+                'post_status'   => 'publish',
+                'post_type'     => 'page'
+            ]);
+        }
+    
+        // Create Customer Registration Page if not exists
+        if (!get_page_by_title('Customer Registration')) {
+            wp_insert_post([
+                'post_title'    => 'Customer Registration',
+                'post_content'  => '[customer_registration_form]',
+                'post_status'   => 'publish',
+                'post_type'     => 'page'
+            ]);
+        }
+    
 }
+

@@ -60,3 +60,7 @@ require_once SERVICEHUB_MVM_PLUGIN_PATH . 'public/dashboard/orders/service-booki
 
 //INcluding Restrict-vendor-login gile,
 require_once plugin_dir_path(__FILE__) . '/restrict-vendor-login.php';
+
+
+//Including customer login form handler file 
+require_once SERVICEHUB_MVM_PLUGIN_PATH . 'public/customers/customer-auth-handler.php';
