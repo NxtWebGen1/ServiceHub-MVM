@@ -36,6 +36,9 @@
     .step.active {
         display: block;
     }
+    #formProgress{
+        height:15px
+    }
 </style>
 
 <div class="container">
@@ -70,7 +73,8 @@
 
                 <div class="mb-3">
                     <label class="form-label">Profile Picture</label>
-                    <input type="file" class="form-control" name="profile_picture" require>
+                    <input type="file" class="form-control" name="profile_picture" accept=".jpg,.jpeg,.png,.webp" required>
+                    <div class="form-text">Accepted formats: jpg, jpeg, png, webp. Max size: 2MB</div>
                 </div>
 
                 <div class="mb-3 position-relative">
@@ -111,7 +115,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <input type="text" class="form-control" name="website" placeholder="Website URL" placeholder="">
+                    <input type="text" class="form-control" name="website" placeholder="Website URL">
                 </div>
 
                 <div class="mb-3">
@@ -120,7 +124,8 @@
 
                 <div class="mb-3">
                     <label class="form-label">Upload Portfolio</label>
-                    <input type="file" class="form-control" name="portfolio_upload">
+                    <input type="file" class="form-control" name="portfolio_upload" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                    <div class="form-text">Accepted formats: pdf, doc, docx, jpg, jpeg, png. Max size: 5MB</div>
                 </div>
 
                 <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
@@ -159,7 +164,7 @@
 
                 <div class="mb-3">
                     <label class="form-label">Upload National ID</label>
-                    <input type="file" class="form-control" name="national_id" >
+                    <input type="file" class="form-control" name="national_id">
                 </div>
 
                 <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
@@ -188,7 +193,6 @@
         }
         document.getElementById('step' + step).classList.add('active');
 
-        // Update progress bar
         const progress = Math.floor((step / totalSteps) * 100);
         const progressBar = document.getElementById('formProgress');
         progressBar.style.width = progress + '%';
@@ -222,6 +226,28 @@
                 return false;
             }
         }
+
+        // File size validation
+        const profilePic = stepDiv.querySelector('input[name="profile_picture"]');
+        if (profilePic && profilePic.files.length > 0) {
+            const file = profilePic.files[0];
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+            if (!allowedTypes.includes(file.type) || file.size > 2 * 1024 * 1024) {
+                alert('Profile picture must be a JPG, JPEG, PNG, or WEBP image and less than 2MB.');
+                return false;
+            }
+        }
+
+        const portfolio = stepDiv.querySelector('input[name="portfolio_upload"]');
+        if (portfolio && portfolio.files.length > 0) {
+            const file = portfolio.files[0];
+            const allowedPortfolioTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/png'];
+            if (!allowedPortfolioTypes.includes(file.type) || file.size > 5 * 1024 * 1024) {
+                alert('Portfolio must be PDF, DOC, DOCX, JPG or PNG and less than 5MB.');
+                return false;
+            }
+        }
+
         return true;
     }
 

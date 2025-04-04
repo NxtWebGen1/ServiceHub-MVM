@@ -132,6 +132,7 @@ get_header();
 
 <!-- JavaScript to Toggle Form Visibility -->
 <script>
+// <<<<<<< Updated upstream
 document.addEventListener("DOMContentLoaded", function() {
     const bookBtn = document.getElementById('book-now-btn');
     const formContainer = document.getElementById('service-booking-container');
@@ -167,12 +168,67 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(error => {
             console.error('Booking error:', error);
             alert('❌ Network error. Try again.');
+// =======
+document.addEventListener("DOMContentLoaded", function () {
+    const formContainer = document.getElementById('service-booking-container');
+    const bookingForm = document.getElementById('service-booking-form');
+    const successMessage = document.getElementById('booking-success');
+    const toggleBtn = document.getElementById('book-now-btn');
+
+    // Show form when "Book This Service" button is clicked
+    toggleBtn.addEventListener('click', function () {
+        formContainer.classList.remove('d-none');
+        successMessage.classList.add('d-none');
+        bookingForm.classList.remove('d-none');
+    });
+
+    // Handle form submission
+    bookingForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        let formData = new FormData(this);
+        formData.append('action', 'servicehub_mvm_book_service');
+
+        fetch('<?php echo admin_url("admin-ajax.php"); ?>', {
+            method: 'POST',
+            body: formData,
+            credentials: 'same-origin'
+        })
+        .then(async response => {
+            const contentType = response.headers.get("content-type");
+
+            if (contentType && contentType.includes("application/json")) {
+                const data = await response.json();
+                console.log("✅ JSON Response:", data);
+
+                if (data.success) {
+                    bookingForm.reset();
+                    bookingForm.classList.add('d-none');
+                    successMessage.classList.remove('d-none');
+                } else {
+                    alert("❌ Error: " + (data.message || 'Unknown issue'));
+                }
+            } else {
+                const raw = await response.text();
+                console.warn("❗ Non-JSON Response:", raw);
+                alert("Unexpected server response. See browser console for details.");
+            }
+        })
+        .catch(error => {
+            console.error('❌ FETCH Error:', error);
+            alert('Something went wrong while submitting. Check console.');
+/// >>>>>>> Stashed changes
         });
     });
 });
 </script>
 
 
+// <<<<<<< Updated upstream
+// =======
+
+
+// >>>>>>> Stashed changes
 <?php
 get_footer();
 ?>
