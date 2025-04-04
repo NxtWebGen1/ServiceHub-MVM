@@ -69,25 +69,8 @@ $portfolio_file     = get_meta('portfolio_upload');
 $national_id        = get_meta('national_id');
 ?>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-<style>
-    .profile-avatar {
-        width: 120px;
-        height: 120px;
-        object-fit: cover;
-        border-radius: 50%;
-    }
-    .form-label {
-        font-weight: 500;
-    }
-    .img-preview {
-        max-width: 100%;
-        height: auto;
-        display: block;
-    }
-</style>
+
 
 <div class="container mt-5">
     <div class="card profile-card p-4" id="profile-dashboard">
@@ -139,8 +122,8 @@ $national_id        = get_meta('national_id');
     </div>
 </div>
 
-<!-- Edit Modal -->
-<div class="modal fade" id="editModal" tabindex="-1">
+<!-- Edit Modal POP UP FOR UPDATE QUERY-->
+<div class="modal fade " id="editModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form method="post" enctype="multipart/form-data">
