@@ -51,6 +51,8 @@ function servicehub_mvm_handle_customer_registration() {
     if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['customer_register_button'])) {
         $full_name        = sanitize_text_field($_POST['customer_full_name']);
         $email            = sanitize_email($_POST['customer_email']);
+        $phone            = sanitize_text_field($_POST['customer_phone']);
+        $address = sanitize_textarea_field($_POST['address']);
         $password         = $_POST['customer_password'];
         $confirm_password = $_POST['customer_confirm_password'];
 
@@ -80,7 +82,10 @@ function servicehub_mvm_handle_customer_registration() {
             'display_name' => $full_name,
             'role'         => 'customer',
         ]);
+        update_user_meta($user_id, 'phone', $phone); // ✅ Save phone number
+        update_user_meta($user_id, 'street_address', $address);
 
+        
         if (is_wp_error($user_id)) {
             wp_die('Registration failed: ' . $user_id->get_error_message());
         }

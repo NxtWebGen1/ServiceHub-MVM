@@ -39,6 +39,13 @@
                 <input type="text" name="customer_phone" class="form-control">
             </div>
 
+            <!-- Address -->
+            <div class="mb-3">
+                <label for="address" class="form-label">Address</label>
+                <textarea name="address" class="form-control" rows="2" required></textarea>
+            </div>
+
+
             <!-- Password -->
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>

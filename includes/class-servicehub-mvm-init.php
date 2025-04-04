@@ -64,3 +64,12 @@ require_once plugin_dir_path(__FILE__) . '/restrict-vendor-login.php';
 
 //Including customer login form handler file 
 require_once SERVICEHUB_MVM_PLUGIN_PATH . 'public/customers/customer-auth-handler.php';
+
+
+//register shortcode for customer dashboard
+function servicehub_mvm_customer_dashboard_shortcode() {
+    ob_start();
+    include SERVICEHUB_MVM_PLUGIN_PATH . 'public/customers/customer-dashboard/dashboard-customer.php';
+    return ob_get_clean();
+}
+add_shortcode('customer_dashboard', 'servicehub_mvm_customer_dashboard_shortcode');

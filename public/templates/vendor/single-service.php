@@ -2,6 +2,7 @@
 get_header();
 ?>
 
+
 <div class="container my-5">
     <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
         <div class="row g-5">
@@ -58,6 +59,17 @@ get_header();
             </div>
         <?php endif; ?>
 
+        <!-- Get User Data of Customer loggedin -->
+        <?php
+            $current_user = wp_get_current_user();
+
+            $customer_name  = is_user_logged_in() ? $current_user->display_name : '';
+            $customer_email = is_user_logged_in() ? $current_user->user_email : '';
+            $customer_phone = is_user_logged_in() ? get_user_meta($current_user->ID, 'phone', true) : '';
+            $customer_address = is_user_logged_in() ? get_user_meta($current_user->ID, 'street_address', true) : '';
+            ?>
+
+        
         <!-- Service Booking Form (Initially Hidden) -->
         <div id="service-booking-container" class="container mt-4 d-none">
             <h3 class="mb-4">Book This Service</h3>
@@ -67,27 +79,28 @@ get_header();
 
                 <div class="mb-3">
                     <label for="name" class="form-label">Full Name</label>
-                    <input type="text" class="form-control" id="name" name="name" required>
+                    <input type="text" class="form-control" id="name" name="name" value="<?php echo esc_attr($customer_name); ?>" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email Address</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
-                </div>
+                    <input type="email" class="form-control" id="email" name="email" value="<?php echo esc_attr($customer_email); ?>" required>
+                    </div>
 
                 <div class="mb-3">
                     <label for="phone" class="form-label">Phone Number</label>
-                    <input type="text" class="form-control" id="phone" name="phone" required>
-                </div>
+                    <input type="text" class="form-control" id="phone" name="phone" value="<?php echo esc_attr($customer_phone); ?>" required>
+                    </div>
 
                 <div class="mb-3">
                     <label for="address" class="form-label">Address</label>
-                    <textarea class="form-control" id="address" name="address" rows="2" required></textarea>
-                </div>
+                    <textarea class="form-control" id="address" name="address" rows="2" required><?php echo esc_textarea($customer_address); ?></textarea>
+                    </div>
 
                 <div class="mb-3">
                     <label for="date" class="form-label">Preferred Date</label>
-                    <input type="date" class="form-control" id="date" name="date" required>
+                    <input type="date" class="form-control" id="date" name="date" value="<?php echo date('Y-m-d'); ?>" required>
+
                 </div>
 
                 <div class="mb-3">

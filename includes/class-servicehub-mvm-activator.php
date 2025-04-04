@@ -80,5 +80,15 @@ function servicehub_mvm_create_pages() {
             ]);
         }
     
+        // Create Customer Dashboard Page if not exists
+if (!get_page_by_title('Customer Dashboard')) {
+    wp_insert_post([
+        'post_title'    => 'Customer Dashboard',
+        'post_content'  => '[customer_dashboard]', // Shortcode we’ll create
+        'post_status'   => 'publish',
+        'post_type'     => 'page'
+    ]);
+}
+
 }
 
