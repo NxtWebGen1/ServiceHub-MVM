@@ -9,7 +9,8 @@ $args = array(
     'post_status'    => 'publish'
 );
 
-$query = new WP_Query($args);
+global $wp_query;
+$query = $wp_query;
 ?>
 
 <style>
@@ -149,6 +150,86 @@ $query = new WP_Query($args);
 
 <div class="modern-grid">
     <h1>Explore Our Services</h1>
+
+    <form method="GET" id="service-filter-form" class="mb-4 p-3 bg-light rounded shadow-sm">
+    <div class="row g-3">
+        <!-- Keyword -->
+        <div class="col-md-3">
+            <input type="text" name="s" class="form-control" placeholder="🔍 Search by keyword" value="<?php echo get_search_query(); ?>">
+        </div>
+
+        <!-- Service Type -->
+        <div class="col-md-2">
+        <!-- Service Type Dropdown -->
+<select class="form-select" name="service_type">
+    <option value="">All Types</option> <!-- 👈 must be an empty string -->
+    <?php
+       $types = get_terms(['taxonomy' => 'service_type', 'hide_empty' => false]);
+       foreach ($types as $type) {
+           $selected = (isset($_GET['service_type']) && $_GET['service_type'] === $type->slug) ? 'selected' : '';
+           echo "<option value='{$type->slug}' $selected>{$type->name}</option>";
+       }
+    ?>
+</select>
+
+        </div>
+
+        <!-- Location -->
+        <div class="col-md-2">
+        <select class="form-select" name="service_location">
+    <option value="">All Locations</option>
+    <?php
+        $locations = get_terms(['taxonomy' => 'service_location', 'hide_empty' => false]);
+        foreach ($locations as $location) {
+            $selected = (isset($_GET['service_location']) && $_GET['service_location'] === $location->slug) ? 'selected' : '';
+            echo "<option value='{$location->slug}' $selected>{$location->name}</option>";
+        }
+    ?>
+</select>
+
+        </div>
+
+        <!-- Min Price -->
+        <div class="col-md-2">
+            <input type="number" name="min_price" class="form-control" placeholder="Min Price" value="<?php echo esc_attr($_GET['min_price'] ?? ''); ?>">
+        </div>
+
+        <!-- Max Price -->
+        <div class="col-md-2">
+            <input type="number" name="max_price" class="form-control" placeholder="Max Price" value="<?php echo esc_attr($_GET['max_price'] ?? ''); ?>">
+        </div>
+
+        <!-- Submit -->
+        <div class="col-md-1">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </div>
+</form>
+<?php if (!empty($_GET)) : ?>
+    <div class="mt-3 text-end">
+    <a href="<?php echo get_post_type_archive_link('service'); ?>" class="btn btn-outline-secondary mb-5">
+    Reset Filters
+</a>
+        </a>
+    </div>
+<?php endif; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const filterForm = document.getElementById('service-filter-form');
+    if (!filterForm) return;
+
+    filterForm.addEventListener('submit', function (e) {
+        const inputs = filterForm.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            if (!input.value.trim()) {
+                input.disabled = true; // Prevent empty fields from being submitted
+            }
+        });
+    });
+});
+</script>
+
 
     <div class="grid">
         <?php if ($query->have_posts()) : ?>

@@ -119,3 +119,71 @@ if (!current_user_can('administrator') && !is_admin()) {
 show_admin_bar(false);
 }
 }        
+
+
+
+
+
+
+
+//Code related to the filters in archive service page
+// servicehub-mvm.php or a file that's included on init
+add_action('pre_get_posts', 'servicehub_mvm_filter_services_archive');
+function servicehub_mvm_filter_services_archive($query) {
+    if (!is_admin() && $query->is_main_query() && is_post_type_archive('service')) {
+
+        // Remove empty search keyword
+        if (isset($_GET['s']) && trim($_GET['s']) === '') {
+            $query->set('s', false);
+        }
+
+        $tax_query = [];
+
+        // Service Type
+if (!empty($_GET['service_type'])) {
+    $tax_query[] = [
+        'taxonomy' => 'service_type',
+        'field'    => 'slug', // ✅ switched to slug
+        'terms'    => sanitize_text_field($_GET['service_type']),
+    ];
+}
+
+// Service Location
+if (!empty($_GET['service_location'])) {
+    $tax_query[] = [
+        'taxonomy' => 'service_location',
+        'field'    => 'slug', // ✅ switched to slug
+        'terms'    => sanitize_text_field($_GET['service_location']),
+    ];
+}
+
+        if (!empty($tax_query)) {
+            $query->set('tax_query', $tax_query);
+        }
+
+        // Meta Query for Price
+        $meta_query = [];
+
+        if (!empty($_GET['min_price'])) {
+            $meta_query[] = [
+                'key'     => '_service_price',
+                'value'   => floatval($_GET['min_price']),
+                'compare' => '>=',
+                'type'    => 'NUMERIC',
+            ];
+        }
+
+        if (!empty($_GET['max_price'])) {
+            $meta_query[] = [
+                'key'     => '_service_price',
+                'value'   => floatval($_GET['max_price']),
+                'compare' => '<=',
+                'type'    => 'NUMERIC',
+            ];
+        }
+
+        if (!empty($meta_query)) {
+            $query->set('meta_query', $meta_query);
+        }
+    }
+}
