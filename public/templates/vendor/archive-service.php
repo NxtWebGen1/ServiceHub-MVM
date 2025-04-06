@@ -1,79 +1,206 @@
-<!-- Add in <head> section -->
+<?php get_header(); ?>
+
 <?php
-get_header();
-?>
-<?php
-// Template for displaying service archive
 $args = array(
     'post_type'      => 'service',
-    'posts_per_page' => -1, // Show all services
+    'posts_per_page' => -1,
     'orderby'        => 'date',
     'order'          => 'DESC',
-    'post_status'    => 'publish' // Ensure only published services appear
+    'post_status'    => 'publish'
 );
 
 $query = new WP_Query($args);
 ?>
 
-<div class="container py-5">
-    <h1 class="text-center mb-4">Our Services</h1>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+<style>
+    body {
+        background: #f4f7fa;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .modern-grid {
+        max-width: 1300px;
+        margin: 3rem auto;
+        padding: 0 1rem;
+    }
+
+    .modern-grid h1 {
+        font-size: 2.2rem;
+        text-align: center;
+        margin-bottom: 2.5rem;
+        color: #222;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .service-card {
+        background: #fff;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+        transition: all 0.25s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .service-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .service-image {
+        height: 200px;
+        overflow: hidden;
+    }
+
+    .service-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .service-content {
+        padding: 1.2rem 1.5rem;
+        flex-grow: 1;
+    }
+
+    .service-content h5 {
+        font-size: 1.1rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .service-content p {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 0.8rem;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        background: #e0ecff;
+        color: #0066cc;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+
+    .price {
+        font-weight: bold;
+        color: #28a745;
+        margin-bottom: 1rem;
+    }
+
+    .vendor-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: auto;
+        padding: 1rem 1.5rem 0;
+        border-top: 1px solid #f1f1f1;
+    }
+
+    .vendor-box img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .vendor-box .vendor-name {
+        font-size: 0.9rem;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .vendor-box .vendor-link {
+        display: block;
+        font-size: 0.75rem;
+        color: #0077cc;
+        text-decoration: none;
+    }
+
+    .view-btn {
+        margin: 1rem 1.5rem;
+        padding: 0.6rem 1rem;
+        background: #007bff;
+        color: #fff;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        text-align: center;
+        text-decoration: none;
+        transition: background 0.2s ease;
+    }
+
+    .view-btn:hover {
+        background: #0056b3;
+    }
+</style>
+
+<div class="modern-grid">
+    <h1>Explore Our Services</h1>
+
+    <div class="grid">
         <?php if ($query->have_posts()) : ?>
-            <?php while ($query->have_posts()) : $query->the_post(); ?>
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden service-card">
-                        <?php if (has_post_thumbnail()) : ?>
-                            <div class="service-image-wrapper">
-                                <img src="<?php the_post_thumbnail_url('medium'); ?>" class="card-img-top" alt="<?php the_title(); ?>">
-                            </div>
-                        <?php endif; ?>
-                        <div class="card-body p-4">
-                            <h5 class="card-title fw-bold mb-2"><?php the_title(); ?></h5>
-                            <p class="card-text text-secondary mb-3"><?php echo wp_trim_words(get_the_content(), 15); ?></p>
+            <?php while ($query->have_posts()) : $query->the_post();
+                $author_id = get_the_author_meta('ID');
+                $profile_picture = get_user_meta($author_id, 'profile_picture', true);
+                $vendor_name = get_the_author();
+                $vendor_profile_url = site_url('/vendor/' . get_the_author_meta('user_login'));
+                ?>
+                <div class="service-card">
 
-                            <div class="mb-3">
-                                <span class="badge bg-primary me-1"><strong>Type:</strong> <?php echo strip_tags(get_the_term_list(get_the_ID(), 'service_type', '', ', ')); ?></span>
-                                <span class="badge bg-secondary"><strong>Location:</strong> <?php echo strip_tags(get_the_term_list(get_the_ID(), 'service_location', '', ', ')); ?></span>
-                            </div>
-
-                            <p class="fw-bold mb-0 text-success">
-                                <?php echo get_post_meta(get_the_ID(), '_service_price', true) ? '$' . get_post_meta(get_the_ID(), '_service_price', true) : 'Contact for quote'; ?>
-                            </p>
+                    <?php if (has_post_thumbnail()) : ?>
+                        <div class="service-image">
+                            <img src="<?php the_post_thumbnail_url('medium'); ?>" alt="<?php the_title(); ?>">
                         </div>
-                        <div class="card-footer bg-white text-center border-0 pb-4">
-                            <a href="<?php the_permalink(); ?>" class="btn btn-outline-primary w-75">View Details</a>
+                    <?php endif; ?>
+
+                    <div class="service-content">
+                        <h5><?php the_title(); ?></h5>
+                        <p><?php echo wp_trim_words(get_the_content(), 20); ?></p>
+
+                        <div class="badges">
+                            <?php
+                            $types = get_the_term_list(get_the_ID(), 'service_type', '', ', ');
+                            $locations = get_the_term_list(get_the_ID(), 'service_location', '', ', ');
+                            if ($types) echo '<span class="badge">Type: ' . strip_tags($types) . '</span>';
+                            if ($locations) echo '<span class="badge">Location: ' . strip_tags($locations) . '</span>';
+                            ?>
+                        </div>
+
+                        <div class="price">
+                            <?php echo get_post_meta(get_the_ID(), '_service_price', true)
+                                ? '$' . get_post_meta(get_the_ID(), '_service_price', true)
+                                : 'Contact for quote'; ?>
                         </div>
                     </div>
+
+                    <div class="vendor-box">
+                        <img src="<?php echo esc_url($profile_picture ?: 'https://ui-avatars.com/api/?name=' . urlencode($vendor_name)); ?>" alt="<?php echo esc_attr($vendor_name); ?>">
+                        <div>
+                            <div class="vendor-name"><?php echo esc_html($vendor_name); ?></div>
+                            <a href="<?php echo esc_url($vendor_profile_url); ?>" class="vendor-link">View Profile</a>
+                        </div>
+                    </div>
+
+                    <a href="<?php the_permalink(); ?>" class="view-btn">View Service</a>
                 </div>
             <?php endwhile; ?>
         <?php else : ?>
-            <div class="col-12 text-center">
-                <p class="text-muted fs-5">No services found.</p>
-            </div>
+            <p>No services found.</p>
         <?php endif; ?>
     </div>
 </div>
 
 <?php wp_reset_postdata(); ?>
-
-<style>
-    .service-card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .service-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .service-image-wrapper {
-        height: 200px;
-        overflow: hidden;
-    }
-
-    .service-image-wrapper img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-</style>
