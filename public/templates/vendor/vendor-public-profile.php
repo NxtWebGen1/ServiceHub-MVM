@@ -4,6 +4,7 @@ get_header();
 $vendor_username = get_query_var('vendor_profile');
 $vendor = get_user_by('login', $vendor_username);
 
+
 if (!$vendor || !in_array('vendor', (array) $vendor->roles)) {
     echo '<div class="container mx-auto px-4 py-12"><div class="bg-red-100 text-red-700 p-4 rounded">Vendor not found or invalid.</div></div>';
     get_footer();
@@ -119,6 +120,19 @@ $profile_picture = get_user_meta($vendor_id, 'profile_picture', true);
         <?php if ($social_links): ?><p>🔗 <a href="<?= esc_url($social_links); ?>" target="_blank">Social</a></p><?php endif; ?>
         <?php if ($years_in_business): ?><p>🕒 <?= esc_html($years_in_business); ?> Years</p><?php endif; ?>
         <?php if ($business_category): ?><p>🏷️ <?= esc_html($business_category); ?></p><?php endif; ?>
+        <?php
+            $phone = get_user_meta($vendor_id, 'phone', true);
+            $street_address = get_user_meta($vendor_id, 'street_address', true);
+            $service_radius = get_user_meta($vendor_id, 'service_radius', true);
+            $gender = get_user_meta($vendor_id, 'gender', true);
+            $portfolio = get_user_meta($vendor_id, 'portfolio_upload', true);
+            ?>
+
+            <?php if ($phone): ?><p>📞 <?= esc_html($phone); ?></p><?php endif; ?>
+            <?php if ($street_address): ?><p>🏠 <?= esc_html($street_address); ?></p><?php endif; ?>
+            <?php if ($service_radius): ?><p>📍 Service Radius: <?= esc_html($service_radius); ?> km</p><?php endif; ?>
+            <?php if ($gender): ?><p>🧑 <?= ucfirst(esc_html($gender)); ?></p><?php endif; ?>
+            <?php if ($portfolio): ?><p>📁 <a href="<?= esc_url($portfolio); ?>" target="_blank">View Portfolio</a></p><?php endif; ?>
     </div>
 
     <div class="vendor-services">

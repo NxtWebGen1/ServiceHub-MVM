@@ -162,10 +162,24 @@ $profile_picture = get_user_meta($vendor_id, 'profile_picture', true);
         <h1><?php the_title(); ?></h1>
         <p><?php the_excerpt(); ?></p>
 
-        <div class="vendor-info">
-            <img src="<?= esc_url($profile_picture ?: 'https://ui-avatars.com/api/?name=' . urlencode(get_the_author())); ?>" alt="">
-            <a href="<?= esc_url($vendor_profile_url); ?>">@<?= esc_html(get_the_author()); ?></a>
-        </div>
+        <?php
+            $author_id = get_the_author_meta('ID');
+            $author = get_userdata($author_id);
+            $profile_picture = get_user_meta($author_id, 'profile_picture', true);
+            $vendor_profile_url = home_url('/vendor/' . $author->user_nicename);
+            $display_name = $author->display_name;
+            ?>
+
+            <div class="vendor-info">
+                <img 
+                    src="<?php echo esc_url($profile_picture ?: 'https://ui-avatars.com/api/?name=' . urlencode($display_name)); ?>" 
+                    alt="<?php echo esc_attr($display_name); ?>" 
+                    class="img-fluid rounded-circle" 
+                    width="60" 
+                />
+                <a href="<?php echo esc_url($vendor_profile_url); ?>">@<?php echo esc_html($display_name); ?></a>
+            </div>
+
     </div>
 
     <div class="service-meta">

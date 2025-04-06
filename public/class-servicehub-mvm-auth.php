@@ -5,7 +5,7 @@
 add_action('init', 'servicehub_mvm_handle_vendor_login');
 
 function servicehub_mvm_handle_vendor_login() {
-    if (isset($_POST['loginbutton'])) {
+    if (isset($_POST['vendor-loginbutton'])) {
         // Sanitize user input
         $username = sanitize_text_field($_POST['username']);
         $password = sanitize_text_field($_POST['password']);

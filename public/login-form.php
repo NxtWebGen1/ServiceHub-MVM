@@ -45,7 +45,7 @@
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" name="loginbutton" class="btn btn-primary login__submit">
+            <button type="submit" name="vendor-loginbutton" class="btn btn-primary login__submit">
                 <i class="fas fa-sign-in-alt me-2"></i> Log In
             </button>
         </form>

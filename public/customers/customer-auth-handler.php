@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
 add_action('init', 'servicehub_mvm_handle_customer_login');
 
 function servicehub_mvm_handle_customer_login() {
-    if (isset($_POST['loginbutton'])) {
+    if (isset($_POST['customer-loginbutton'])) {
         $username = sanitize_text_field($_POST['username']);
         $password = sanitize_text_field($_POST['password']);
 
