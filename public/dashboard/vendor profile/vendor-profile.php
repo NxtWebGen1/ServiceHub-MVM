@@ -37,9 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
             echo "<script>alert('New passwords do not match.');</script>";
         } elseif (!wp_check_password($current_password, $current_user->user_pass, $current_user->ID)) {
             echo "<script>alert('Current password is incorrect.');</script>";
-        }  elseif (wp_check_password($new_password, $current_user->user_pass, $current_user->ID)) {
+        } elseif (wp_check_password($new_password, $current_user->user_pass, $current_user->ID)) {
             echo "<script>alert('New password cannot be the same as the current password.');</script>";
-        }else {
+        } else {
             wp_set_password($new_password, $current_user->ID);
             echo "<script>alert('Password updated successfully. Please log in again.'); window.location.href = '" . wp_logout_url() . "';</script>";
             exit;
@@ -59,7 +59,7 @@ $gender             = get_meta('gender');
 $country            = get_meta('service_location');
 $phone              = get_meta('phone');
 $website            = get_meta('website');
-$social_links        = get_meta('social_links');
+$social_links       = get_meta('social_links');
 $service_location   = get_meta('service_location');
 $service_radius     = get_meta('service_radius');
 $business_name      = get_meta('business_name');
@@ -68,8 +68,6 @@ $emergency_contact  = get_meta('emergency_contact');
 $portfolio_file     = get_meta('portfolio_upload');
 $national_id        = get_meta('national_id');
 ?>
-
-
 
 
 <div class="container mt-5">
@@ -120,9 +118,35 @@ $national_id        = get_meta('national_id');
             <?php endforeach; ?>
         </div>
     </div>
+
+    <!-- STRIPE CONNECT SECTION START | Added below profile card -->
+    <?php
+    $vendor_id = get_current_user_id();
+    $stripe_account_id = get_user_meta($vendor_id, '_stripe_account_id', true);
+
+    // Your Stripe TEST client ID
+    $stripe_client_id = 'ca_S5cGOVTyNa0QqgcvTYvIpjZhzxmYfFlw';
+    $redirect_uri = site_url('/wp-content/plugins/servicehub-mvm/public/vendors/vendor-stripe.php');
+    $stripe_connect_url = "https://connect.stripe.com/oauth/authorize?response_type=code&client_id={$stripe_client_id}&scope=read_write&redirect_uri={$redirect_uri}";
+    ?>
+
+    <div class="card mt-4 p-3">
+        <h5>Stripe Connection</h5>
+        <?php if ($stripe_account_id): ?>
+            <div class="alert alert-success">
+                ✅ Stripe Connected!<br>
+                <strong>Account ID:</strong> <?= esc_html($stripe_account_id) ?>
+            </div>
+        <?php else: ?>
+            <p>To receive payments, please connect your Stripe account:</p>
+            <a href="<?= esc_url($stripe_connect_url) ?>" class="btn btn-primary">Connect with Stripe</a>
+        <?php endif; ?>
+    </div>
+    <!-- STRIPE CONNECT SECTION END -->
 </div>
 
-<!-- Edit Modal POP UP FOR UPDATE QUERY-->
+
+<!-- Edit Modal POP UP FOR UPDATE QUERY -->
 <div class="modal fade " id="editModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
