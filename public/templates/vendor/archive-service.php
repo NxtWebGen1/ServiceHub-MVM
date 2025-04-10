@@ -32,6 +32,98 @@ $query = $wp_query;
         color: #222;
     }
 
+    /* Filter Form Container */
+    #service-filter-form {
+        background-color: #ffffff;
+        padding: 1.5rem 2rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 3rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    /* Flex Layout for Filters */
+    #service-filter-form .row {
+        display: flex;
+        gap: 20px;
+        overflow-x: scroll;
+        flex-wrap: nowrap;
+    }
+
+    #service-filter-form .row::-webkit-scrollbar {
+        height: 8px;
+        background-color: #f1f1f1;
+    }
+
+    #service-filter-form .row::-webkit-scrollbar-thumb {
+        background-color: #007bff;
+        border-radius: 10px;
+    }
+
+    /* Filter Inputs & Selects */
+    .filter-input,
+    .filter-select {
+        padding: 12px;
+        font-size: 1rem;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        transition: all 0.3s ease;
+        min-width: 220px;
+    }
+
+    .filter-input:focus,
+    .filter-select:focus {
+        border-color: #007bff;
+        background-color: #ffffff;
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+    }
+
+    /* Filter Button */
+    .filter-btn {
+        padding: 7px;
+        font-size: 1.1rem;
+        background-color: #007bff;
+        color: white;
+        border-radius: 8px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+        width: 100%;
+    }
+
+    .filter-btn:hover {
+        background-color: #0056b3;
+    }
+    #service-filter-form .row {
+    -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+    scrollbar-width: none;      /* For Firefox */
+}
+
+#service-filter-form .row::-webkit-scrollbar {
+    display: none;  /* For Chrome, Safari, and Opera */
+}
+
+    /* Responsive Design for Smaller Screens */
+    @media (max-width: 767px) {
+        #service-filter-form .row {
+            flex-wrap: no-wrap;
+        }
+
+        .filter-input,
+        .filter-select {
+            min-width: 100%;
+        }
+
+        .filter-btn {
+            width: 100%;
+        }
+    }
+
+    /* Service Cards Styling */
     .grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -46,11 +138,13 @@ $query = $wp_query;
         transition: all 0.25s ease;
         display: flex;
         flex-direction: column;
+        border: 1px solid transparent;
     }
 
     .service-card:hover {
         transform: translateY(-6px);
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgb(2, 118, 233);
     }
 
     .service-image {
@@ -70,8 +164,9 @@ $query = $wp_query;
     }
 
     .service-content h5 {
-        font-size: 1.1rem;
+        font-size: 1.5rem;
         margin-bottom: 0.6rem;
+        color: #0066cc;
     }
 
     .service-content p {
@@ -85,6 +180,7 @@ $query = $wp_query;
         flex-wrap: wrap;
         gap: 6px;
         margin-bottom: 0.8rem;
+        min-height: 25px;
     }
 
     .badge {
@@ -98,8 +194,9 @@ $query = $wp_query;
 
     .price {
         font-weight: bold;
-        color: #28a745;
+        color: #000;
         margin-bottom: 1rem;
+        font-size: 1rem;
     }
 
     .vendor-box {
@@ -152,84 +249,81 @@ $query = $wp_query;
     <h1>Explore Our Services</h1>
 
     <form method="GET" id="service-filter-form" class="mb-4 p-3 bg-light rounded shadow-sm">
-    <div class="row g-3">
-        <!-- Keyword -->
-        <div class="col-md-3">
-            <input type="text" name="s" class="form-control" placeholder="🔍 Search by keyword" value="<?php echo get_search_query(); ?>">
+        <div class="row g-3">
+            <!-- Keyword -->
+            <div class="col-md-3">
+                <input type="text" name="s" class="form-control filter-input" placeholder="🔍 Search by keyword" value="<?php echo get_search_query(); ?>">
+            </div>
+
+            <!-- Service Type -->
+            <div class="col-md-2">
+                <select class="form-select filter-select" name="service_type">
+                    <option value="">All Types</option>
+                    <?php
+                    $types = get_terms(['taxonomy' => 'service_type', 'hide_empty' => false]);
+                    foreach ($types as $type) {
+                        $selected = (isset($_GET['service_type']) && $_GET['service_type'] === $type->slug) ? 'selected' : '';
+                        echo "<option value='{$type->slug}' $selected>{$type->name}</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+
+            <!-- Location -->
+            <div class="col-md-2">
+                <select class="form-select filter-select" name="service_location">
+                    <option value="">All Locations</option>
+                    <?php
+                    $locations = get_terms(['taxonomy' => 'service_location', 'hide_empty' => false]);
+                    foreach ($locations as $location) {
+                        $selected = (isset($_GET['service_location']) && $_GET['service_location'] === $location->slug) ? 'selected' : '';
+                        echo "<option value='{$location->slug}' $selected>{$location->name}</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+
+            <!-- Min Price -->
+            <div class="col-md-2">
+                <input type="number" name="min_price" class="form-control filter-input" placeholder="Min Price" value="<?php echo esc_attr($_GET['min_price'] ?? ''); ?>">
+            </div>
+
+            <!-- Max Price -->
+            <div class="col-md-2">
+                <input type="number" name="max_price" class="form-control filter-input" placeholder="Max Price" value="<?php echo esc_attr($_GET['max_price'] ?? ''); ?>">
+            </div>
+
+            <!-- Submit Button -->
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-primary w-100 filter-btn">Filter</button>
+            </div>
         </div>
+    </form>
 
-        <!-- Service Type -->
-        <div class="col-md-2">
-        <!-- Service Type Dropdown -->
-<select class="form-select" name="service_type">
-    <option value="">All Types</option> <!-- 👈 must be an empty string -->
-    <?php
-       $types = get_terms(['taxonomy' => 'service_type', 'hide_empty' => false]);
-       foreach ($types as $type) {
-           $selected = (isset($_GET['service_type']) && $_GET['service_type'] === $type->slug) ? 'selected' : '';
-           echo "<option value='{$type->slug}' $selected>{$type->name}</option>";
-       }
-    ?>
-</select>
-
+    <!-- Reset Button if Filters are Applied -->
+    <?php if (!empty($_GET)) : ?>
+        <div class="mt-3 text-end">
+            <a href="<?php echo get_post_type_archive_link('service'); ?>" class="btn btn-outline-secondary mb-5">
+                Reset Filters
+            </a>
         </div>
+    <?php endif; ?>
 
-        <!-- Location -->
-        <div class="col-md-2">
-        <select class="form-select" name="service_location">
-    <option value="">All Locations</option>
-    <?php
-        $locations = get_terms(['taxonomy' => 'service_location', 'hide_empty' => false]);
-        foreach ($locations as $location) {
-            $selected = (isset($_GET['service_location']) && $_GET['service_location'] === $location->slug) ? 'selected' : '';
-            echo "<option value='{$location->slug}' $selected>{$location->name}</option>";
-        }
-    ?>
-</select>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterForm = document.getElementById('service-filter-form');
+            if (!filterForm) return;
 
-        </div>
-
-        <!-- Min Price -->
-        <div class="col-md-2">
-            <input type="number" name="min_price" class="form-control" placeholder="Min Price" value="<?php echo esc_attr($_GET['min_price'] ?? ''); ?>">
-        </div>
-
-        <!-- Max Price -->
-        <div class="col-md-2">
-            <input type="number" name="max_price" class="form-control" placeholder="Max Price" value="<?php echo esc_attr($_GET['max_price'] ?? ''); ?>">
-        </div>
-
-        <!-- Submit -->
-        <div class="col-md-1">
-            <button type="submit" class="btn btn-primary w-100">Filter</button>
-        </div>
-    </div>
-</form>
-<?php if (!empty($_GET)) : ?>
-    <div class="mt-3 text-end">
-    <a href="<?php echo get_post_type_archive_link('service'); ?>" class="btn btn-outline-secondary mb-5">
-    Reset Filters
-</a>
-        </a>
-    </div>
-<?php endif; ?>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const filterForm = document.getElementById('service-filter-form');
-    if (!filterForm) return;
-
-    filterForm.addEventListener('submit', function (e) {
-        const inputs = filterForm.querySelectorAll('input, select');
-        inputs.forEach(input => {
-            if (!input.value.trim()) {
-                input.disabled = true; // Prevent empty fields from being submitted
-            }
+            filterForm.addEventListener('submit', function (e) {
+                const inputs = filterForm.querySelectorAll('input, select');
+                inputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        input.disabled = true; // Prevent empty fields from being submitted
+                    }
+                });
+            });
         });
-    });
-});
-</script>
-
+    </script>
 
     <div class="grid">
         <?php if ($query->have_posts()) : ?>
