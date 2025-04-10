@@ -52,3 +52,96 @@ padding:50px !important
 .modal-content{
     padding: 30px;
 }
+
+
+
+
+/* PROFILE PAGE */
+
+/* Profile Card Enhancements */
+.profile-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(235, 235, 235, 0.9));
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+.profile-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Profile Avatar Styling */
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+.profile-avatar:hover {
+    transform: scale(1.05);
+}
+
+/* Edit Button Styling */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    border-radius: 30px;
+    padding: 8px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Input Fields Styling */
+.form-control {
+    border-radius: 10px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+.form-control:focus {
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.6);
+    border-color: #007bff;
+}
+
+/* Modal Styling */
+.modal-content {
+    border-radius: 10px;
+    padding: 30px;
+    background: #fff;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+.modal-header {
+    border-bottom: 2px solid #f1f1f1;
+}
+.modal-footer {
+    border-top: 2px solid #f1f1f1;
+}
+.modal.fade .modal-dialog {
+    transform: scale(0.9);
+    transition: transform 0.3s ease-in-out;
+}
+.modal.show .modal-dialog {
+    transform: scale(1);
+}
+
+/* Hover Effects for Profile Fields */
+.form-control:hover {
+    background-color: #f8f9fa;
+}
+.form-control:active {
+    background-color: #e2e6ea;
+}
+.form-label {
+    font-weight: 600;
+}
+
+/* Smooth Transitions on Modal and Profile Changes */
+.profile-card, .modal-content, .form-control {
+    transition: all 0.3s ease;
+}
