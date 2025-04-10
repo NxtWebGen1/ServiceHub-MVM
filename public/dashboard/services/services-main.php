@@ -1,4 +1,17 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<style>
+    .service-card {
+        border: 1px solid #dee2e6;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    }
+</style>
+
 <?php
 // Handle Delete
 if (isset($_POST['delete_service']) && !empty($_POST['delete_service_id'])) {
@@ -25,13 +38,15 @@ $args = array(
 $query = new WP_Query($args);
 ?>
 
-<div class="container-fluid mt-4 px-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Your Services</h2>
-        <a href="?page=vendor-dashboard&tab=add-service" class="btn btn-primary">ADD NEW</a>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+        <h2 class="fw-bold">My Services</h2>
+        <a href="?page=vendor-dashboard&tab=add-service" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i> Add New Service
+        </a>
     </div>
 
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div class="row g-4">
         <?php if ($query->have_posts()) : ?>
             <?php while ($query->have_posts()) : $query->the_post();
                 $id = get_the_ID();
@@ -41,26 +56,40 @@ $query = new WP_Query($args);
                 $status = get_post_meta($id, '_service_status', true);
                 $schedule = get_post_meta($id, '_service_schedule', true);
             ?>
-                <div class="col">
-                    <div class="card h-100 shadow-sm">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card h-100 service-card">
                         <?php if (has_post_thumbnail()) : ?>
                             <img src="<?php the_post_thumbnail_url('medium'); ?>" class="card-img-top" alt="<?php the_title(); ?>">
                         <?php endif; ?>
                         <div class="card-body">
-                            <h5 class="card-title"><?php the_title(); ?></h5>
-                            <p><strong>Status:</strong> <span class="badge bg-<?php echo ($status === 'Active') ? 'success' : 'secondary'; ?>"><?php echo esc_html($status ?: 'Inactive'); ?></span></p>
-                            <p><strong>Price:</strong> <?php echo $price ? '$' . esc_html($price) : 'Contact for quote'; ?></p>
-                            <?php if ($discount): ?><p><strong>Discount Price:</strong> $<?php echo esc_html($discount); ?></p><?php endif; ?>
-                            <?php if ($duration): ?><p><strong>Duration:</strong> <?php echo esc_html($duration); ?></p><?php endif; ?>
-                            <p><strong>Location:</strong> <?php echo get_the_term_list($id, 'service_location', '', ', '); ?></p>
-                            <p><strong>Availability:</strong> <?php echo esc_html($schedule ?: 'Not specified'); ?></p>
+                            <h5 class="card-title mb-2"><?php the_title(); ?></h5>
+                            <span class="badge bg-<?php echo ($status === 'Active') ? 'success' : 'secondary'; ?>">
+                                <?php echo esc_html($status ?: 'Inactive'); ?>
+                            </span>
+                            <ul class="list-unstyled mt-3 mb-0">
+                                <li><i class="bi bi-cash-coin me-2"></i><strong>Price:</strong> <?php echo $price ? '$' . esc_html($price) : 'Contact for quote'; ?></li>
+                                <?php if ($discount): ?>
+                                    <li><i class="bi bi-tag me-2"></i><strong>Discount:</strong> $<?php echo esc_html($discount); ?></li>
+                                <?php endif; ?>
+                                <?php if ($duration): ?>
+                                    <li><i class="bi bi-clock me-2"></i><strong>Duration:</strong> <?php echo esc_html($duration); ?></li>
+                                <?php endif; ?>
+                                <li><i class="bi bi-geo-alt me-2"></i><strong>Location:</strong> <?php echo get_the_term_list($id, 'service_location', '', ', '); ?></li>
+                                <li><i class="bi bi-calendar-check me-2"></i><strong>Availability:</strong> <?php echo esc_html($schedule ?: 'Not specified'); ?></li>
+                            </ul>
                         </div>
-                        <div class="card-footer d-grid gap-2">
-                            <a href="<?php the_permalink(); ?>" class="btn btn-outline-primary">View Details</a>
-                            <a href="?page=vendor-dashboard&tab=edit-service&edit_service=<?php echo $id; ?>" class="btn btn-outline-warning">Edit</a>
+                        <div class="card-footer bg-white border-top-0 d-flex flex-column gap-2">
+                            <a href="<?php the_permalink(); ?>" class="btn btn-outline-primary w-100">
+                                <i class="bi bi-eye"></i> View Details
+                            </a>
+                            <a href="?page=vendor-dashboard&tab=edit-service&edit_service=<?php echo $id; ?>" class="btn btn-outline-warning w-100">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
                             <form method="post" onsubmit="return confirm('Are you sure you want to delete this service?');">
                                 <input type="hidden" name="delete_service_id" value="<?php echo $id; ?>">
-                                <button type="submit" name="delete_service" class="btn btn-outline-danger">Delete</button>
+                                <button type="submit" name="delete_service" class="btn btn-outline-danger w-100">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
                             </form>
                         </div>
                     </div>
@@ -68,7 +97,9 @@ $query = new WP_Query($args);
             <?php endwhile; ?>
         <?php else : ?>
             <div class="col-12">
-                <p>No services found.</p>
+                <div class="alert alert-info text-center">
+                    <i class="bi bi-info-circle"></i> No services found.
+                </div>
             </div>
         <?php endif; ?>
     </div>
