@@ -49,7 +49,7 @@ $query = $wp_query;
     /* Flex Layout for Filters */
     #service-filter-form .row {
         display: flex;
-        gap: 20px;
+        gap: 30px;
         overflow-x: scroll;
         flex-wrap: nowrap;
     }
