@@ -82,44 +82,40 @@ add_shortcode('customer_dashboard', 'servicehub_mvm_customer_dashboard_shortcode
 
 
 
-
-//Registers Vendor Public Profile template
+// Registers Vendor Public Profile template
 // Register custom rewrite rule for vendor profile
 function servicehub_mvm_add_vendor_profile_rewrite() {
     add_rewrite_rule(
-        '^vendor/([^/]*)/?',
+        '^vendor/([^/]+)/?', // This handles spaces properly (encoded as %20)
         'index.php?vendor_profile=$matches[1]',
         'top'
     );
 }
 add_action('init', 'servicehub_mvm_add_vendor_profile_rewrite');
 
-// Add custom query var
+// Add custom query var for vendor_profile
 function servicehub_mvm_vendor_profile_query_var($vars) {
-    $vars[] = 'vendor_profile';
+    $vars[] = 'vendor_profile'; // Adding 'vendor_profile' to the query vars
     return $vars;
 }
 add_filter('query_vars', 'servicehub_mvm_vendor_profile_query_var');
 
 // Template loader for vendor profile
 function servicehub_mvm_load_vendor_profile_template($template) {
-    $vendor_username = get_query_var('vendor_profile');
+    $vendor_username = get_query_var('vendor_profile'); // Get the vendor's username
 
     if ($vendor_username) {
+        // Load the vendor profile template
         return SERVICEHUB_MVM_PLUGIN_PATH . 'public/templates/vendor/vendor-public-profile.php';
     }
 
-    return $template;
+    return $template; // If no vendor found, use default template
 }
 add_filter('template_include', 'servicehub_mvm_load_vendor_profile_template');
 
 // Flush rewrite rules on plugin activation
 function servicehub_mvm_flush_rewrites_on_activation() {
-    servicehub_mvm_add_vendor_profile_rewrite();
-    flush_rewrite_rules();
+    servicehub_mvm_add_vendor_profile_rewrite(); // Register rewrite rule
+    flush_rewrite_rules(); // Flush rewrite rules
 }
 register_activation_hook(__FILE__, 'servicehub_mvm_flush_rewrites_on_activation');
-
-
-
-

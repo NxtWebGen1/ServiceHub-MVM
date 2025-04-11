@@ -1,9 +1,8 @@
-<?php
+<?php 
 get_header();
 
 $vendor_username = get_query_var('vendor_profile');
 $vendor = get_user_by('login', $vendor_username);
-
 
 if (!$vendor || !in_array('vendor', (array) $vendor->roles)) {
     echo '<div class="container mx-auto px-4 py-12"><div class="bg-red-100 text-red-700 p-4 rounded">Vendor not found or invalid.</div></div>';
@@ -19,6 +18,7 @@ $social_links = get_user_meta($vendor_id, 'social_links', true);
 $years_in_business = get_user_meta($vendor_id, 'years_in_business', true);
 $business_category = get_user_meta($vendor_id, 'business_category', true);
 $profile_picture = get_user_meta($vendor_id, 'profile_picture', true);
+
 ?>
 
 <style>
