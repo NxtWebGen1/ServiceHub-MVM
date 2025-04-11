@@ -60,165 +60,118 @@ $statuses = [
 ];
 ?>
 
-<div class="container mt-4">
-    <div class="accordion" id="orderStatusAccordion">
-        <?php foreach ($statuses as $status_key => $status_data):
-            $orders = get_orders_by_status($status_key, $user_id);
-            ?>
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed bg-<?php echo esc_attr($status_data['color']); ?> text-white"
-                        type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapse-<?php echo esc_attr($status_key); ?>">
-                        <?php echo esc_html($status_data['title']); ?>
-                        <span class="badge bg-dark ms-2"><?php echo $orders->found_posts; ?></span>
-                    </button>
-                </h2>
-                <div id="collapse-<?php echo esc_attr($status_key); ?>" class="accordion-collapse collapse">
-                    <div class="accordion-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered align-middle">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Service ID</th>
-                                        <th>Customer Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Status</th>
-                                        <th>Details</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if ($orders->have_posts()): ?>
-                                        <?php while ($orders->have_posts()):
-                                            $orders->the_post();
-                                            $post_id = get_the_ID();
-                                            $service_id = get_post_meta($post_id, '_service_id', true) ?: 'N/A';
-                                            $customer_name = get_post_meta($post_id, '_customer_name', true) ?: 'N/A';
-                                            $customer_email = get_post_meta($post_id, '_customer_email', true) ?: 'N/A';
-                                            $customer_phone = get_post_meta($post_id, '_customer_phone', true) ?: 'N/A';
-                                            $order_status = get_post_meta($post_id, '_order_status', true);
+<!-- Redesigned Orders Section with Stylish Layout and Modal -->
+<!-- Redesigned Orders Section with Stylish Layout and Modal -->
+<div class="container py-4">
+  <h3 class="fw-bold mb-4">Manage Your Orders</h3>
 
-                                            $location = get_post_meta($post_id, '_customer_address', true) ?: 'Not specified';
-                                            $date = get_post_meta($post_id, '_preferred_date', true) ?: 'Not specified';
-                                            $notes = get_post_meta($post_id, '_order_notes', true) ?: 'No additional notes';
+  <div class="accordion" id="orderStatusAccordion">
+    <?php foreach ($statuses as $status_key => $status_data):
+      $orders = get_orders_by_status($status_key, $user_id);
+    ?>
+      <div class="accordion-item mb-4 border border-light-subtle shadow-sm rounded-3 overflow-hidden">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed bg-light text-dark rounded-top-3 fw-semibold" type="button"
+            data-bs-toggle="collapse" data-bs-target="#collapse-<?php echo esc_attr($status_key); ?>">
+            <i class="fa-solid fa-circle me-2 text-<?php echo esc_attr($status_data['color']); ?>"></i>
+            <?php echo esc_html($status_data['title']); ?>
+            <span class="badge rounded-pill ms-2 bg-<?php echo esc_attr($status_data['color']); ?> text-white"><?php echo $orders->found_posts; ?></span>
+          </button>
+        </h2>
+        <div id="collapse-<?php echo esc_attr($status_key); ?>" class="accordion-collapse collapse">
+          <div class="accordion-body bg-white rounded-bottom-3">
+            <div class="table-responsive">
+              <table class="table align-middle table-borderless">
+                <thead class="table-light">
+                  <tr class="text-muted text-uppercase small">
+                    <th>Service ID</th>
+                    <th>Customer</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php if ($orders->have_posts()): ?>
+                    <?php while ($orders->have_posts()): $orders->the_post();
+                      $post_id = get_the_ID();
+                      $service_id = get_post_meta($post_id, '_service_id', true) ?: 'N/A';
+                      $customer_name = get_post_meta($post_id, '_customer_name', true) ?: 'N/A';
+                      $customer_email = get_post_meta($post_id, '_customer_email', true) ?: 'N/A';
+                      $customer_phone = get_post_meta($post_id, '_customer_phone', true) ?: 'N/A';
+                      $order_status = get_post_meta($post_id, '_order_status', true);
+                      $location = get_post_meta($post_id, '_customer_address', true) ?: 'Not specified';
+                      $date = get_post_meta($post_id, '_preferred_date', true) ?: 'Not specified';
+                      $notes = get_post_meta($post_id, '_order_notes', true) ?: 'No additional notes';
+                      $is_disabled = ($order_status === 'canceled' || $order_status === 'completed') ? 'disabled' : '';
+                    ?>
+                    <tr>
+                      <td><span class="fw-semibold text-dark"><?php echo esc_html($service_id); ?></span></td>
+                      <td><?php echo esc_html($customer_name); ?></td>
+                      <td><?php echo esc_html($customer_email); ?></td>
+                      <td><?php echo esc_html($customer_phone); ?></td>
+                      <td>
+                        <form method="post" id="statusForm_<?php echo esc_attr($post_id); ?>">
+                          <input type="hidden" name="order_id" value="<?php echo esc_attr($post_id); ?>">
+                          <select name="new_status" class="form-select form-select-sm rounded-pill px-3"
+                            onchange="confirmStatusChange(this, '<?php echo esc_attr($post_id); ?>')"
+                            <?php echo $is_disabled; ?>>
+                            <option value="pending" <?php selected($order_status, 'pending'); ?>>Pending</option>
+                            <option value="approved" <?php selected($order_status, 'approved'); ?>>Approved</option>
+                            <option value="completed" <?php selected($order_status, 'completed'); ?>>Completed</option>
+                            <option value="canceled" <?php selected($order_status, 'canceled'); ?>>Canceled</option>
+                          </select>
+                        </form>
+                      </td>
+                      <td>
+                        <button class="btn btn-outline-primary btn-sm rounded-pill px-3 view-more" data-bs-toggle="modal"
+                          data-bs-target="#detailsModal_<?php echo $post_id; ?>">
+                          <i class="fa fa-eye me-1"></i> View
+                        </button>
+                      </td>
+                    </tr>
 
-
-
-                                            $is_disabled = ($order_status === 'canceled' || $order_status === 'completed') ? 'disabled' : '';
-                                            ?>
-                                            <tr>
-                                                <td><?php echo esc_html($service_id); ?></td>
-                                                <td><?php echo esc_html($customer_name); ?></td>
-                                                <td><?php echo esc_html($customer_email); ?></td>
-                                                <td><?php echo esc_html($customer_phone); ?></td>
-                                                <td>
-                                                    <form method="post" id="statusForm_<?php echo esc_attr($post_id); ?>">
-                                                        <input type="hidden" name="order_id"
-                                                            value="<?php echo esc_attr($post_id); ?>">
-                                                        <select name="new_status" class="form-select"
-                                                            onchange="confirmStatusChange(this, '<?php echo esc_attr($post_id); ?>')"
-                                                            <?php echo $is_disabled; ?>>
-                                                            <option value="pending" <?php selected($order_status, 'pending'); ?>>
-                                                                Pending</option>
-                                                            <option value="approved" <?php selected($order_status, 'approved'); ?>>
-                                                                Approved</option>
-                                                            <option value="completed" <?php selected($order_status, 'completed'); ?>>Completed</option>
-                                                            <option value="canceled" <?php selected($order_status, 'canceled'); ?>>
-                                                                Canceled</option>
-                                                        </select>
-                                                    </form>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-outline-info btn-sm view-more" data-bs-toggle="modal"
-                                                        data-bs-target="#detailsModal_<?php echo $post_id; ?>">View</button>
-                                                </td>
-                                            </tr>
-                                            <!--    FULL DETAIL POP UP -->
-                                            <div class="modal fade" id="detailsModal_<?php echo $post_id; ?>" tabindex="-1">
-                                                <div class="modal-dialog modal-dialog-centered modal-lg">
-                                                    <div class="modal-content rounded-4 shadow-lg">
-                                                        <!-- Modal Header -->
-                                                        <div class="modal-header"
-                                                            style="background: #0d6efd; color: #fff; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-                                                            <h5 class="modal-title" style="font-weight: 600; font-size: 1.25rem;">
-                                                                Order Details - #<?php echo $post_id; ?></h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close"></button>
-                                                        </div>
-
-                                                        <!-- Modal Body -->
-                                                        <div class="modal-body"
-                                                            style="background: #fff; color: #333; font-size: 1rem; line-height: 1.6; padding: 20px;">
-                                                            <div class="row">
-                                                                <div class="col-md-6 mb-3">
-                                                                    <strong class="text-muted">Service Name:</strong><br>
-                                                                    <span
-                                                                        style="font-weight: 500;"><?php echo esc_html(get_the_title($service_id)); ?></span>
-                                                                </div>
-                                                                <div class="col-md-6 mb-3">
-                                                                    <strong class="text-muted">Customer Name:</strong><br>
-                                                                    <span
-                                                                        style="font-weight: 500;"><?php echo esc_html($customer_name); ?></span>
-                                                                </div>
-                                                                <div class="col-md-6 mb-3">
-                                                                    <strong class="text-muted">Customer Email:</strong><br>
-                                                                    <span
-                                                                        style="font-weight: 500;"><?php echo esc_html($customer_email); ?></span>
-                                                                </div>
-                                                                <div class="col-md-6 mb-3">
-                                                                    <strong class="text-muted">Customer Phone:</strong><br>
-                                                                    <span
-                                                                        style="font-weight: 500;"><?php echo esc_html($customer_phone); ?></span>
-                                                                </div>
-                                                                <div class="col-md-6 mb-3">
-                                                                    <strong class="text-muted">Service Location:</strong><br>
-                                                                    <span
-                                                                        style="font-weight: 500;"><?php echo esc_html($location); ?></span>
-                                                                </div>
-                                                                <div class="col-md-6 mb-3">
-                                                                    <strong class="text-muted">Service Date & Time:</strong><br>
-                                                                    <span
-                                                                        style="font-weight: 500;"><?php echo esc_html($date); ?></span>
-                                                                </div>
-                                                                <div class="col-md-12 mb-3">
-                                                                    <strong class="text-muted">Additional Notes:</strong><br>
-                                                                    <span
-                                                                        style="font-weight: 500;"><?php echo nl2br(esc_html($notes)); ?></span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Modal Footer -->
-                                                        <div class="modal-footer"
-                                                            style="background: #f1f3f5; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
-                                                            <button type="button"
-                                                                class="btn btn-outline-danger btn-lg px-4"
-                                                                data-bs-dismiss="modal">Close</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
-
-
-                                        <?php endwhile;
-                                        wp_reset_postdata(); ?>
-                                    <?php else: ?>
-                                        <tr>
-                                            <td colspan="6" class="text-center text-danger">No
-                                                <?php echo esc_html($status_data['title']); ?> found.</td>
-                                        </tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
+                    <!-- MODAL -->
+                    <div class="modal fade" id="detailsModal_<?php echo $post_id; ?>" tabindex="-1">
+                      <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content rounded-4 shadow border-0">
+                          <div class="modal-header bg-primary text-white rounded-top-4">
+                            <h5 class="modal-title">Order Details #<?php echo $post_id; ?></h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                          </div>
+                          <div class="modal-body px-4 py-3">
+                            <div class="row g-3">
+                              <div class="col-md-6"><strong>Service Name:</strong><br><?php echo esc_html(get_the_title($service_id)); ?></div>
+                              <div class="col-md-6"><strong>Customer:</strong><br><?php echo esc_html($customer_name); ?></div>
+                              <div class="col-md-6"><strong>Email:</strong><br><?php echo esc_html($customer_email); ?></div>
+                              <div class="col-md-6"><strong>Phone:</strong><br><?php echo esc_html($customer_phone); ?></div>
+                              <div class="col-md-6"><strong>Location:</strong><br><?php echo esc_html($location); ?></div>
+                              <div class="col-md-6"><strong>Date & Time:</strong><br><?php echo esc_html($date); ?></div>
+                              <div class="col-md-12"><strong>Notes:</strong><br><?php echo nl2br(esc_html($notes)); ?></div>
+                            </div>
+                          </div>
+                          <div class="modal-footer bg-light rounded-bottom-4">
+                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+                          </div>
                         </div>
+                      </div>
                     </div>
-                </div>
+
+                    <?php endwhile; wp_reset_postdata(); ?>
+                  <?php else: ?>
+                    <tr>
+                      <td colspan="6" class="text-center text-muted">No <?php echo esc_html($status_data['title']); ?> found.</td>
+                    </tr>
+                  <?php endif; ?>
+                </tbody>
+              </table>
             </div>
-        <?php endforeach; ?>
-    </div>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
 </div>
 
 

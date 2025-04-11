@@ -7,147 +7,138 @@ if (!is_user_logged_in()) {
 $current_user = wp_get_current_user();
 $user_id = $current_user->ID;
 
-// Optional: Verify this user has the 'customer' role
 if (!in_array('customer', (array) $current_user->roles)) {
     echo '<div class="alert alert-danger">Access denied. Only customers can view this dashboard.</div>';
     return;
 }
 
-// Handle tab switching
 $tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 'profile';
 ?>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
 <style>
-    /* Container Styling */
     .customer-dashboard-container {
-        margin-top: 50px;
-        padding: 30px;
-        background: #f4f6f9;
-        border-radius: 12px;
-        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        margin-top: 40px;
+        padding: 20px;
+        background: #f8f9fc;
+        border-radius: 16px;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
     }
 
-    /* Greeting Section */
-    .dashboard-greeting {
+    .dashboard-header {
+        background: linear-gradient(to right, #0d6efd, #66b2ff);
+        color: #fff;
+        padding: 25px 30px;
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         margin-bottom: 30px;
-        background: #fff;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
 
-    .dashboard-greeting h2 {
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: #333;
-        margin: 0;
+    .dashboard-header h2 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color : white;
+        margin-bottom: 5px;
     }
 
-    .dashboard-greeting .user-avatar {
-        width: 50px;
-        height: 50px;
+    .dashboard-header .avatar {
+        background: rgba(255,255,255,0.2);
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
-        background-color: #ccc;
+        font-size: 24px;
+        font-weight: bold;
+        color: #fff;
         display: flex;
-        justify-content: center;
         align-items: center;
-        font-size: 22px;
-        font-weight: 700;
-        color: white;
+        justify-content: center;
     }
 
-    /* Navigation Tabs */
     .dashboard-nav {
         display: flex;
-        justify-content: flex-start;
-        gap: 20px;
-        margin-bottom: 30px;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        gap: 1rem;
     }
 
-    .dashboard-nav .nav-link {
-        padding: 12px 20px;
-        background-color: #fff;
+    .dashboard-tabs {
+        display: flex;
+        gap: 15px;
+    }
+
+    .dashboard-tabs .nav-link {
+        padding: 10px 20px;
+        background: #fff;
         border-radius: 10px;
-        font-weight: 600;
-        color: #555;
-        text-align: center;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        transition: all 0.2s ease;
+        font-weight: 500;
+        color: #333;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: 0.3s;
     }
 
-    .dashboard-nav .nav-link:hover {
+    .dashboard-tabs .nav-link.active {
+        background-color: #0d6efd;
+        color: #fff;
+    }
+
+    .dashboard-tabs .nav-link:hover {
         background-color: #e2e6ea;
     }
 
-    .dashboard-nav .nav-link.active {
-        background-color: #0d6efd;
-        color: white;
-        border-color: #0d6efd;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Logout Button */
     .logout-btn {
-        font-weight: 600;
-        background-color: #f03e3e;
-        color: white;
-        padding: 8px 20px;
-        border-radius: 6px;
+        background-color: #dc3545;
+        color: #fff;
         border: none;
-        transition: background-color 0.2s ease;
-        margin-left: auto;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: 500;
+        transition: background-color 0.3s;
     }
 
     .logout-btn:hover {
-        background-color: #d63333;
+        background-color: #bb2d3b;
     }
 
-    /* Content Section */
     .dashboard-content {
-        background-color: #fff;
-        border-radius: 12px;
+        background: #ffffff;
         padding: 30px;
+        border-radius: 16px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
 </style>
 
-<div class="container-fluid mt-4">
+<div class="container">
     <div class="customer-dashboard-container">
-        <!-- Greeting Section -->
-        <div class="dashboard-greeting">
+        <div class="dashboard-header">
             <div>
-                <h2>Welcome, <?php echo esc_html($current_user->display_name); ?> 👋</h2>
-                <p>Here’s your customer dashboard</p>
+                <h2>Hello, <?php echo esc_html($current_user->display_name); ?> 👋</h2>
             </div>
-            <div class="user-avatar">
-                <span><?php echo strtoupper(substr($current_user->display_name, 0, 1)); ?></span>
+            <div class="avatar">
+                <?php echo strtoupper(substr($current_user->display_name, 0, 1)); ?>
             </div>
         </div>
 
-        <!-- Navigation Tabs -->
         <div class="dashboard-nav">
-            <a href="?tab=profile" class="nav-link <?php echo ($tab === 'profile') ? 'active' : ''; ?>">Profile</a>
-            <a href="?tab=orders" class="nav-link <?php echo ($tab === 'orders') ? 'active' : ''; ?>">My Orders</a>
+            <div class="dashboard-tabs">
+                <a href="?tab=profile" class="nav-link <?php echo ($tab === 'profile') ? 'active' : ''; ?>">Profile</a>
+                <a href="?tab=orders" class="nav-link <?php echo ($tab === 'orders') ? 'active' : ''; ?>">My Orders</a>
+            </div>
             <a href="<?php echo wp_logout_url(home_url()); ?>" class="logout-btn">Logout</a>
         </div>
 
-        <!-- Dynamic Content -->
         <div class="dashboard-content">
             <?php
             switch ($tab) {
                 case 'orders':
                     include plugin_dir_path(__FILE__) . 'orders-customer.php';
                     break;
-
                 case 'profile':
                     include plugin_dir_path(__FILE__) . 'profile-customer.php';
                     break;
-
                 default:
                     echo '<p>This is your customer dashboard. Use the tabs to view your orders or update your profile.</p>';
                     break;

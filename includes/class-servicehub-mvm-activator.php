@@ -90,5 +90,16 @@ if (!get_page_by_title('Customer Dashboard')) {
     ]);
 }
 
+        // Create Archive Service Page if not exists
+        if (!get_page_by_title('All Services')) {
+            wp_insert_post([
+                'post_title'    => 'Services',
+                'post_content'  => '', 
+                'post_status'   => 'publish',
+                'post_type'     => 'page'
+            ]);
+        }
+        
+
 }
 
