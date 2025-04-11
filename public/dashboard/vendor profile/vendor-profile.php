@@ -72,16 +72,25 @@ $national_id        = get_meta('national_id');
 
 <div class="container py-5">
     <div class="border-0 shadow rounded-4 p-4 mb-4 bg-light">
-        <div class="d-flex align-items-center mb-4">
-            <img src="<?= esc_url($profile_picture) ?>" class="rounded-circle me-4" style="width: 100px; height: 100px; object-fit: cover;">
-            <div>
-                <h4 class="fw-bold mb-1">Hello, <?= esc_html($full_name) ?></h4>
-                <p class="text-muted mb-0">Email: <?= esc_html($email) ?></p>
-            </div>
-            <button class="btn btn-primary ms-auto rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#editModal">
-                <i class="fas fa-edit me-2"></i>Edit Profile
-            </button>
-        </div>
+    <div class="d-flex align-items-center mb-4">
+    <img src="<?= esc_url($profile_picture) ?>" class="rounded-circle me-4" style="width: 100px; height: 100px; object-fit: cover;">
+    <div>
+        <h4 class="fw-bold mb-1">Hello, <?= esc_html($full_name) ?></h4>
+        <p class="text-muted mb-0">Email: <?= esc_html($email) ?></p>
+    </div>
+
+    <?php $vendor_url = site_url('/vendor/' . $current_user->user_nicename); ?>
+
+    <div class="ms-auto d-flex gap-2">
+        <a href="<?= esc_url($vendor_url) ?>" class="btn btn-outline-dark rounded-pill px-4" target="_blank">
+            <i class="fas fa-eye me-2"></i>View Profile
+        </a>
+        <button class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#editModal">
+            <i class="fas fa-edit me-2"></i>Edit Profile
+        </button>
+    </div>
+</div>
+
 
         <div class="row g-3">
             <?php
