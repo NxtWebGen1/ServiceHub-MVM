@@ -245,9 +245,10 @@
 
                 <div class="btn-group-nav">
                     <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
-                    <button type="submit" class="btn btn-success">
+                    <button type="submit" name="register_button" class="btn btn-success">
                         <i class="fa fa-user-plus me-1"></i> Register
                     </button>
+
                 </div>
             </div>
         </form>

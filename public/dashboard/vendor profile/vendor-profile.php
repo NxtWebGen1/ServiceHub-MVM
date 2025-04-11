@@ -70,18 +70,20 @@ $national_id        = get_meta('national_id');
 ?>
 
 
-<div class="container mt-5">
-    <div class="card profile-card p-4" id="profile-dashboard">
+<div class="container py-5">
+    <div class="border-0 shadow rounded-4 p-4 mb-4 bg-light">
         <div class="d-flex align-items-center mb-4">
-            <img src="<?= esc_url($profile_picture) ?>" class="profile-avatar me-3">
+            <img src="<?= esc_url($profile_picture) ?>" class="rounded-circle me-4" style="width: 100px; height: 100px; object-fit: cover;">
             <div>
-                <h4 class="mb-1"><?= esc_html($full_name) ?></h4>
-                <small class="text-muted">Email: <?= esc_html($email) ?></small>
+                <h4 class="fw-bold mb-1">Hello, <?= esc_html($full_name) ?></h4>
+                <p class="text-muted mb-0">Email: <?= esc_html($email) ?></p>
             </div>
-            <button class="btn btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#editModal">Edit Profile</button>
+            <button class="btn btn-primary ms-auto rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#editModal">
+                <i class="fas fa-edit me-2"></i>Edit Profile
+            </button>
         </div>
 
-        <div class="row">
+        <div class="row g-3">
             <?php
             $fields_display = [
                 'Nickname' => $nickname,
@@ -103,105 +105,118 @@ $national_id        = get_meta('national_id');
                 $is_image = ($label === 'Portfolio File') && filter_var($value, FILTER_VALIDATE_URL);
                 $is_file  = ($label === 'National ID') && filter_var($value, FILTER_VALIDATE_URL);
             ?>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label"><?= $label ?></label>
-                    <div class="form-control bg-light">
-                        <?php if ($is_image): ?>
-                            <img src="<?= esc_url($value) ?>" alt="Portfolio" class="img-preview">
-                        <?php elseif ($is_file): ?>
-                            <a href="<?= esc_url($value) ?>" target="_blank">View <?= $label ?></a>
-                        <?php else: ?>
-                            <?= $value ? esc_html($value) : '—' ?>
-                        <?php endif; ?>
-                    </div>
+            <div class="col-md-6">
+                <label class="form-label fw-semibold text-secondary"><?= $label ?></label>
+                <div class="bg-white border rounded p-2">
+                    <?php if ($is_image): ?>
+                        <a href="<?= esc_url($value) ?>" target="_blank">
+    <img src="<?= esc_url($value) ?>" alt="Portfolio" class="img-fluid rounded shadow-sm" style="max-height: 120px; object-fit: contain;">
+</a>
+                    <?php elseif ($is_file): ?>
+                        <a href="<?= esc_url($value) ?>" target="_blank" class="text-decoration-underline">View <?= $label ?></a>
+                    <?php else: ?>
+                        <?= $value ? esc_html($value) : '<span class="text-muted">—</span>' ?>
+                    <?php endif; ?>
                 </div>
+            </div>
             <?php endforeach; ?>
         </div>
     </div>
-
-    <!-- STRIPE CONNECT SECTION START | Added below profile card -->
-    <?php
-    $vendor_id = get_current_user_id();
-    $stripe_account_id = get_user_meta($vendor_id, '_stripe_account_id', true);
-
-    // Your Stripe TEST client ID
-    $stripe_client_id = 'ca_S5cGOVTyNa0QqgcvTYvIpjZhzxmYfFlw';
-    $redirect_uri = site_url('/wp-content/plugins/servicehub-mvm/public/vendors/vendor-stripe.php');
-    $stripe_connect_url = "https://connect.stripe.com/oauth/authorize?response_type=code&client_id={$stripe_client_id}&scope=read_write&redirect_uri={$redirect_uri}";
-    ?>
-
-    <div class="card mt-4 p-3">
-        <h5>Stripe Connection</h5>
-        <?php if ($stripe_account_id): ?>
-            <div class="alert alert-success">
-                ✅ Stripe Connected!<br>
-                <strong>Account ID:</strong> <?= esc_html($stripe_account_id) ?>
-            </div>
-        <?php else: ?>
-            <p>To receive payments, please connect your Stripe account:</p>
-            <a href="<?= esc_url($stripe_connect_url) ?>" class="btn btn-primary">Connect with Stripe</a>
-        <?php endif; ?>
-    </div>
-    <!-- STRIPE CONNECT SECTION END -->
 </div>
 
 
-<!-- Edit Modal POP UP FOR UPDATE QUERY -->
-<div class="modal fade " id="editModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <form method="post" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Profile</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3"><label class="form-label">Nickname</label><input type="text" name="nickname" class="form-control" value="<?= esc_attr($nickname) ?>"></div>
-                        <div class="col-md-6 mb-3"><label class="form-label">Gender</label><input type="text" name="gender" class="form-control" value="<?= esc_attr($gender) ?>"></div>
-                        <div class="col-md-6 mb-3"><label class="form-label">Country</label><input type="text" name="country" class="form-control" value="<?= esc_attr($country) ?>"></div>
-                        <div class="col-md-6 mb-3"><label class="form-label">Phone</label><input type="text" name="phone" class="form-control" value="<?= esc_attr($phone) ?>"></div>
-                        <div class="col-md-6 mb-3"><label class="form-label">Website</label><input type="text" name="website" class="form-control" value="<?= esc_attr($website) ?>"></div>
-                        <div class="col-md-6 mb-3"><label class="form-label">Social Links</label><input type="text" name="social_links" class="form-control" value="<?= esc_attr($social_links) ?>"></div>
-                        <div class="col-md-6 mb-3"><label class="form-label">Service Location</label><input type="text" name="service_location" class="form-control" value="<?= esc_attr($service_location) ?>"></div>
-                        <div class="col-md-6 mb-3"><label class="form-label">Service Radius</label><input type="text" name="service_radius" class="form-control" value="<?= esc_attr($service_radius) ?>"></div>
-                        <div class="col-md-6 mb-3"><label class="form-label">Business Name</label><input type="text" name="business_name" class="form-control" value="<?= esc_attr($business_name) ?>"></div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Business Category</label>
-                            <select name="business_category" class="form-select">
-                                <option value="">Select</option>
-                                <option value="Plumbing" <?= $business_category === 'Plumbing' ? 'selected' : '' ?>>Plumbing</option>
-                                <option value="Electrical" <?= $business_category === 'Electrical' ? 'selected' : '' ?>>Electrical</option>
-                                <option value="Cleaning" <?= $business_category === 'Cleaning' ? 'selected' : '' ?>>Cleaning</option>
-                                <option value="Other" <?= $business_category === 'Other' ? 'selected' : '' ?>>Other</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3"><label class="form-label">Emergency Contact</label><input type="text" name="emergency_contact" class="form-control" value="<?= esc_attr($emergency_contact) ?>"></div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Portfolio File (Upload Image)</label>
-                            <input type="file" name="portfolio_upload" class="form-control" accept="image/*">
-                        </div>
-                        <hr>
-                        <h6>Change Password</h6>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Current Password</label>
-                            <input type="password" name="current_password" class="form-control">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">New Password</label>
-                            <input type="password" name="new_password" class="form-control">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Confirm New Password</label>
-                            <input type="password" name="confirm_password" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" name="update_profile" class="btn btn-success">Save Changes</button>
-                </div>
-            </form>
+
+<!-- Redesigned Edit Profile Modal -->
+<div class="modal fade" id="editModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content rounded-4 shadow-lg border-0">
+      <form method="post" enctype="multipart/form-data">
+        <div class="modal-header bg-primary text-white rounded-top-4">
+          <h5 class="modal-title fw-semibold"><i class="fa-solid fa-pen-to-square me-2"></i>Edit Your Profile</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+
+        <div class="modal-body bg-light py-4 px-4">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label class="form-label">Nickname</label>
+              <input type="text" name="nickname" class="form-control rounded-3" value="<?= esc_attr($nickname) ?>">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Gender</label>
+              <input type="text" name="gender" class="form-control rounded-3" value="<?= esc_attr($gender) ?>">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Country</label>
+              <input type="text" name="country" class="form-control rounded-3" value="<?= esc_attr($country) ?>">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Phone</label>
+              <input type="text" name="phone" class="form-control rounded-3" value="<?= esc_attr($phone) ?>">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Website</label>
+              <input type="text" name="website" class="form-control rounded-3" value="<?= esc_attr($website) ?>">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Social Links</label>
+              <input type="text" name="social_links" class="form-control rounded-3" value="<?= esc_attr($social_links) ?>">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Service Location</label>
+              <input type="text" name="service_location" class="form-control rounded-3" value="<?= esc_attr($service_location) ?>">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Service Radius</label>
+              <input type="text" name="service_radius" class="form-control rounded-3" value="<?= esc_attr($service_radius) ?>">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Business Name</label>
+              <input type="text" name="business_name" class="form-control rounded-3" value="<?= esc_attr($business_name) ?>">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Business Category</label>
+              <select name="business_category" class="form-select rounded-3">
+                <option value="">Select</option>
+                <option value="Plumbing" <?= $business_category === 'Plumbing' ? 'selected' : '' ?>>Plumbing</option>
+                <option value="Electrical" <?= $business_category === 'Electrical' ? 'selected' : '' ?>>Electrical</option>
+                <option value="Cleaning" <?= $business_category === 'Cleaning' ? 'selected' : '' ?>>Cleaning</option>
+                <option value="Other" <?= $business_category === 'Other' ? 'selected' : '' ?>>Other</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Emergency Contact</label>
+              <input type="text" name="emergency_contact" class="form-control rounded-3" value="<?= esc_attr($emergency_contact) ?>">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Portfolio File (Upload Image)</label>
+              <input type="file" name="portfolio_upload" class="form-control rounded-3" accept="image/*">
+            </div>
+          </div>
+
+          <hr class="my-4">
+          <h6 class="mb-3 fw-bold">Change Password</h6>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Current Password</label>
+              <input type="password" name="current_password" class="form-control rounded-3">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">New Password</label>
+              <input type="password" name="new_password" class="form-control rounded-3">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Confirm New Password</label>
+              <input type="password" name="confirm_password" class="form-control rounded-3">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer bg-white rounded-bottom-4">
+          <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" name="update_profile" class="btn btn-success rounded-pill px-4">Save Changes</button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
