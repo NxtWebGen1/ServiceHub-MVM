@@ -101,11 +101,11 @@ $query = $wp_query;
     #service-filter-form .row {
     -ms-overflow-style: none;  /* For Internet Explorer and Edge */
     scrollbar-width: none;      /* For Firefox */
-}
+    }
 
-#service-filter-form .row::-webkit-scrollbar {
-    display: none;  /* For Chrome, Safari, and Opera */
-}
+    #service-filter-form .row::-webkit-scrollbar {
+        display: none;  /* For Chrome, Safari, and Opera */
+    }
 
     /* Responsive Design for Smaller Screens */
     @media (max-width: 767px) {

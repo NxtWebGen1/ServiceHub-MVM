@@ -130,7 +130,7 @@ $profile_picture = get_user_meta($vendor_id, 'profile_picture', true);
 
             <?php if ($phone): ?><p>📞 <?= esc_html($phone); ?></p><?php endif; ?>
             <?php if ($street_address): ?><p>🏠 <?= esc_html($street_address); ?></p><?php endif; ?>
-            <?php if ($service_radius): ?><p>📍 Service Radius: <?= esc_html($service_radius); ?> km</p><?php endif; ?>
+            <?php if ($service_radius): ?><p>📍 Service Radius: <?= esc_html($service_radius); ?> </p><?php endif; ?>
             <?php if ($gender): ?><p>🧑 <?= ucfirst(esc_html($gender)); ?></p><?php endif; ?>
             <?php if ($portfolio): ?><p>📁 <a href="<?= esc_url($portfolio); ?>" target="_blank">View Portfolio</a></p><?php endif; ?>
     </div>
