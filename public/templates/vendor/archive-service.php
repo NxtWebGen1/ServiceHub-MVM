@@ -9,368 +9,307 @@ $args = array(
     'post_status'    => 'publish'
 );
 
+$query = new WP_Query($args);
 global $wp_query;
 $query = $wp_query;
 ?>
 
 <style>
     body {
-        background: #f4f7fa;
-        font-family: 'Segoe UI', sans-serif;
+        background: #f9fafa;
+        font-family: 'Inter', sans-serif;
     }
 
-    .modern-grid {
-        max-width: 1300px;
-        margin: 3rem auto;
-        padding: 0 1rem;
+    .archive-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 4rem 1rem;
     }
 
-    .modern-grid h1 {
-        font-size: 2.2rem;
+    .hero {
         text-align: center;
-        margin-bottom: 2.5rem;
-        color: #222;
+        padding-bottom: 2rem;
     }
 
-    /* Filter Form Container */
-    #service-filter-form {
-        background-color: #ffffff;
-        padding: 1.5rem 2rem;
-        border-radius: 15px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        margin-bottom: 3rem;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        overflow-x: auto;
-        white-space: nowrap;
+    .hero h1 {
+        font-size: 2.5rem;
+        color: #111;
+        margin-bottom: 0.5rem;
     }
 
-    /* Flex Layout for Filters */
-    #service-filter-form .row {
-        display: flex;
-        gap: 30px;
-        overflow-x: scroll;
-        flex-wrap: nowrap;
-    }
-
-    #service-filter-form .row::-webkit-scrollbar {
-        height: 8px;
-        background-color: #f1f1f1;
-    }
-
-    #service-filter-form .row::-webkit-scrollbar-thumb {
-        background-color: #007bff;
-        border-radius: 10px;
-    }
-
-    /* Filter Inputs & Selects */
-    .filter-input,
-    .filter-select {
-        padding: 12px;
-        font-size: 1rem;
-        border-radius: 10px;
-        background-color: #f9f9f9;
-        border: 1px solid #ddd;
-        transition: all 0.3s ease;
-        min-width: 220px;
-    }
-
-    .filter-input:focus,
-    .filter-select:focus {
-        border-color: #007bff;
-        background-color: #ffffff;
-        box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
-    }
-
-    /* Filter Button */
-    .filter-btn {
-        padding: 7px;
+    .hero p {
+        color: #666;
         font-size: 1.1rem;
-        background-color: #007bff;
-        color: white;
-        border-radius: 8px;
-        font-weight: bold;
-        transition: background-color 0.3s ease;
-        width: 100%;
     }
 
-    .filter-btn:hover {
-        background-color: #0056b3;
-    }
-    #service-filter-form .row {
-    -ms-overflow-style: none;  /* For Internet Explorer and Edge */
-    scrollbar-width: none;      /* For Firefox */
-    }
-
-    #service-filter-form .row::-webkit-scrollbar {
-        display: none;  /* For Chrome, Safari, and Opera */
+    .filter-panel {
+        background: #fff;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
     }
 
-    /* Responsive Design for Smaller Screens */
-    @media (max-width: 767px) {
-        #service-filter-form .row {
-            flex-wrap: no-wrap;
-        }
-
-        .filter-input,
-        .filter-select {
-            min-width: 100%;
-        }
-
-        .filter-btn {
-            width: 100%;
-        }
+    .filter-panel .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
     }
 
-    /* Service Cards Styling */
-    .grid {
+    .filter-panel .row > * {
+        flex: 1;
+        min-width: 160px;
+    }
+
+    .service-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 2rem;
     }
 
     .service-card {
-        background: #fff;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-        transition: all 0.25s ease;
-        display: flex;
-        flex-direction: column;
-        border: 1px solid transparent;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-4px);
+}
+
+.service-card img {
+    width: 100%;
+    height: 240px; /* Increased height */
+    object-fit: cover;
+}
+
+.service-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.service-content h5 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 0.4rem;
+}
+
+.service-content p {
+    font-size: 0.95rem;
+    color: #444;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+    line-height: 1.5;
+}
+
+.taxonomy-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.taxonomy-pill {
+    background-color: #f0f4ff;
+    color: #0a58ca;
+    font-weight: 500;
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+
+.price {
+    display: inline-block;
+    background: #e6f5ea;
+    color: #2e7d32;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    align-self: flex-start;
+    box-shadow: inset 0 0 0 1px #c2e3cf;
+}
+
+
+.vendor-profile {
+    display: flex;
+    align-items: center;
+    background: #f9fafb;
+    border: 1px solid #e4e7ec;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    margin-top: auto;
+    gap: 12px;
+}
+
+.vendor-profile img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.vendor-meta {
+    flex-grow: 1;
+}
+
+.vendor-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #111;
+}
+
+.vendor-link {
+    font-size: 0.8rem;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.vendor-link:hover {
+    text-decoration: underline;
+}
+
+.view-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: #007bff;
+    color: white;
+    padding: 0.85rem;
+    font-weight: 600;
+    border-radius: 0 0 14px 14px;
+    text-decoration: none;
+    transition: background 0.2s ease;
+    margin-top: 0;
+}
+
+.view-btn:hover {
+    background: #0056b3;
+    color : white;
+}
+
+
+    .reset-link {
+        text-align: right;
+        margin-top: 1rem;
     }
 
-    .service-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgb(2, 118, 233);
-    }
-
-    .service-image {
-        height: 200px;
-        overflow: hidden;
-    }
-
-    .service-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .service-content {
-        padding: 1.2rem 1.5rem;
-        flex-grow: 1;
-    }
-
-    .service-content h5 {
-        font-size: 1.5rem;
-        margin-bottom: 0.6rem;
-        color: #0066cc;
-    }
-
-    .service-content p {
-        color: #666;
+    .reset-link a {
+        color: #888;
         font-size: 0.9rem;
-        margin-bottom: 1rem;
-    }
-
-    .badges {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin-bottom: 0.8rem;
-        min-height: 25px;
-    }
-
-    .badge {
-        font-size: 0.75rem;
-        background: #e0ecff;
-        color: #0066cc;
-        padding: 4px 8px;
-        border-radius: 6px;
-        font-weight: 500;
-    }
-
-    .price {
-        font-weight: bold;
-        color: #000;
-        margin-bottom: 1rem;
-        font-size: 1rem;
-    }
-
-    .vendor-box {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-top: auto;
-        padding: 1rem 1.5rem 0;
-        border-top: 1px solid #f1f1f1;
-    }
-
-    .vendor-box img {
-        width: 40px;
-        height: 40px;
-        object-fit: cover;
-        border-radius: 50%;
-    }
-
-    .vendor-box .vendor-name {
-        font-size: 0.9rem;
-        color: #333;
-        font-weight: 600;
-    }
-
-    .vendor-box .vendor-link {
-        display: block;
-        font-size: 0.75rem;
-        color: #0077cc;
-        text-decoration: none;
-    }
-
-    .view-btn {
-        margin: 1rem 1.5rem;
-        padding: 0.6rem 1rem;
-        background: #007bff;
-        color: #fff;
-        border-radius: 6px;
-        font-size: 0.85rem;
-        text-align: center;
-        text-decoration: none;
-        transition: background 0.2s ease;
-    }
-
-    .view-btn:hover {
-        background: #0056b3;
+        text-decoration: underline;
     }
 </style>
 
-<div class="modern-grid">
-    <h1>Explore Our Services</h1>
+<div class="archive-wrapper">
 
-    <form method="GET" id="service-filter-form" class="mb-4 p-3 bg-light rounded shadow-sm">
-        <div class="row g-3">
-            <!-- Keyword -->
-            <div class="col-md-3">
-                <input type="text" name="s" class="form-control filter-input" placeholder="🔍 Search by keyword" value="<?php echo get_search_query(); ?>">
-            </div>
+    <div class="hero">
+        <h1>Explore Services</h1>
+        <p>Discover trusted services tailored to your needs.</p>
+    </div>
 
-            <!-- Service Type -->
-            <div class="col-md-2">
-                <select class="form-select filter-select" name="service_type">
-                    <option value="">All Types</option>
-                    <?php
+    <form method="GET" id="service-filter-form" class="filter-panel">
+        <div class="row">
+            <input type="text" name="s" class="form-control" placeholder="Search..." value="<?php echo get_search_query(); ?>">
+
+            <select class="form-select" name="service_type">
+                <option value="">All Types</option>
+                <?php
                     $types = get_terms(['taxonomy' => 'service_type', 'hide_empty' => false]);
                     foreach ($types as $type) {
                         $selected = (isset($_GET['service_type']) && $_GET['service_type'] === $type->slug) ? 'selected' : '';
                         echo "<option value='{$type->slug}' $selected>{$type->name}</option>";
                     }
-                    ?>
-                </select>
-            </div>
+                ?>
+            </select>
 
-            <!-- Location -->
-            <div class="col-md-2">
-                <select class="form-select filter-select" name="service_location">
-                    <option value="">All Locations</option>
-                    <?php
+            <select class="form-select" name="service_location">
+                <option value="">All Locations</option>
+                <?php
                     $locations = get_terms(['taxonomy' => 'service_location', 'hide_empty' => false]);
                     foreach ($locations as $location) {
                         $selected = (isset($_GET['service_location']) && $_GET['service_location'] === $location->slug) ? 'selected' : '';
                         echo "<option value='{$location->slug}' $selected>{$location->name}</option>";
                     }
-                    ?>
-                </select>
-            </div>
+                ?>
+            </select>
 
-            <!-- Min Price -->
-            <div class="col-md-2">
-                <input type="number" name="min_price" class="form-control filter-input" placeholder="Min Price" value="<?php echo esc_attr($_GET['min_price'] ?? ''); ?>">
-            </div>
+            <input type="number" name="min_price" class="form-control" placeholder="Min Price" value="<?php echo esc_attr($_GET['min_price'] ?? ''); ?>">
+            <input type="number" name="max_price" class="form-control" placeholder="Max Price" value="<?php echo esc_attr($_GET['max_price'] ?? ''); ?>">
 
-            <!-- Max Price -->
-            <div class="col-md-2">
-                <input type="number" name="max_price" class="form-control filter-input" placeholder="Max Price" value="<?php echo esc_attr($_GET['max_price'] ?? ''); ?>">
-            </div>
-
-            <!-- Submit Button -->
-            <div class="col-md-1">
-                <button type="submit" class="btn btn-primary w-100 filter-btn">Filter</button>
-            </div>
+            <button type="submit" class="btn btn-primary">Filter</button>
         </div>
+
+        <?php if (!empty($_GET)) : ?>
+        <div class="reset-link">
+            <a href="<?php echo get_post_type_archive_link('service'); ?>">Reset filters</a>
+        </div>
+        <?php endif; ?>
     </form>
 
-    <!-- Reset Button if Filters are Applied -->
-    <?php if (!empty($_GET)) : ?>
-        <div class="mt-3 text-end">
-            <a href="<?php echo get_post_type_archive_link('service'); ?>" class="btn btn-outline-secondary mb-5">
-                Reset Filters
-            </a>
-        </div>
-    <?php endif; ?>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const filterForm = document.getElementById('service-filter-form');
-            if (!filterForm) return;
-
-            filterForm.addEventListener('submit', function (e) {
-                const inputs = filterForm.querySelectorAll('input, select');
-                inputs.forEach(input => {
-                    if (!input.value.trim()) {
-                        input.disabled = true; // Prevent empty fields from being submitted
-                    }
-                });
-            });
-        });
-    </script>
-
-    <div class="grid">
+    <div class="service-grid">
         <?php if ($query->have_posts()) : ?>
             <?php while ($query->have_posts()) : $query->the_post();
                 $author_id = get_the_author_meta('ID');
                 $profile_picture = get_user_meta($author_id, 'profile_picture', true);
                 $vendor_name = get_the_author();
                 $vendor_profile_url = site_url('/vendor/' . get_the_author_meta('user_login'));
-                ?>
-                <div class="service-card">
+            ?>
+            <div class="service-card">
+    <?php if (has_post_thumbnail()) : ?>
+        <img src="<?php the_post_thumbnail_url('large'); ?>" alt="<?php the_title(); ?>">
+    <?php endif; ?>
 
-                    <?php if (has_post_thumbnail()) : ?>
-                        <div class="service-image">
-                            <img src="<?php the_post_thumbnail_url('medium'); ?>" alt="<?php the_title(); ?>">
-                        </div>
-                    <?php endif; ?>
+    <div class="service-content">
+        <h5><?php the_title(); ?></h5>
+        <p><?php echo wp_trim_words(get_the_content(), 20); ?></p>
 
-                    <div class="service-content">
-                        <h5><?php the_title(); ?></h5>
-                        <p><?php echo wp_trim_words(get_the_content(), 20); ?></p>
+        <div class="taxonomy-section">
+            <?php
+                $types = get_the_terms(get_the_ID(), 'service_type');
+                $locations = get_the_terms(get_the_ID(), 'service_location');
+                if ($types) {
+                    foreach ($types as $type) {
+                        echo "<span class='taxonomy-pill'>{$type->name}</span>";
+                    }
+                }
+                if ($locations) {
+                    foreach ($locations as $location) {
+                        echo "<span class='taxonomy-pill'>{$location->name}</span>";
+                    }
+                }
+            ?>
+        </div>
 
-                        <div class="badges">
-                            <?php
-                            $types = get_the_term_list(get_the_ID(), 'service_type', '', ', ');
-                            $locations = get_the_term_list(get_the_ID(), 'service_location', '', ', ');
-                            if ($types) echo '<span class="badge">Type: ' . strip_tags($types) . '</span>';
-                            if ($locations) echo '<span class="badge">Location: ' . strip_tags($locations) . '</span>';
-                            ?>
-                        </div>
+        <div class="price">
+    <?php
+        $price = get_post_meta(get_the_ID(), '_service_price', true);
+        echo $price ? 'Starting at $' . $price : 'Contact for quote';
+    ?>
+</div>
 
-                        <div class="price">
-                            <?php echo get_post_meta(get_the_ID(), '_service_price', true)
-                                ? '$' . get_post_meta(get_the_ID(), '_service_price', true)
-                                : 'Contact for quote'; ?>
-                        </div>
-                    </div>
 
-                    <div class="vendor-box">
-                        <img src="<?php echo esc_url($profile_picture ?: 'https://ui-avatars.com/api/?name=' . urlencode($vendor_name)); ?>" alt="<?php echo esc_attr($vendor_name); ?>">
-                        <div>
-                            <div class="vendor-name"><?php echo esc_html($vendor_name); ?></div>
-                            <a href="<?php echo esc_url($vendor_profile_url); ?>" class="vendor-link">View Profile</a>
-                        </div>
-                    </div>
+        <div class="vendor-profile">
+            <img src="<?php echo esc_url($profile_picture ?: 'https://ui-avatars.com/api/?name=' . urlencode($vendor_name)); ?>" alt="<?php echo esc_attr($vendor_name); ?>">
+            <div class="vendor-meta">
+                <div class="vendor-name"><?php echo esc_html($vendor_name); ?></div>
+                <a href="<?php echo esc_url($vendor_profile_url); ?>" class="vendor-link">View Profile</a>
+            </div>
+        </div>
+    </div>
 
-                    <a href="<?php the_permalink(); ?>" class="view-btn">View Service</a>
-                </div>
+    <a href="<?php the_permalink(); ?>" class="view-btn">View Service</a>
+</div>
+
+
             <?php endwhile; ?>
         <?php else : ?>
             <p>No services found.</p>
