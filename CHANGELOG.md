@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.0.2] - 2026-05-31
+
+### Added
+- `README.md` — full project documentation with features, installation guide, plugin structure, and compatibility info
+- `CHANGELOG.md` — version history tracking going forward
+- GitHub repository topics, About description, and official release tag for better discoverability
+
+---
+
 ## [1.0.0] - 2025-02-15
 
 ### Added
